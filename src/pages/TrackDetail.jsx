@@ -1,0 +1,205 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { getTrack } from '../services/spotify';
+import { supabase } from '../lib/supabase';
+import ReviewCard from '../components/ReviewCard';
+import SkeletonCard from '../components/SkeletonCard';
+import { Play } from 'lucide-react';
+
+export default function TrackDetail() {
+  const { spotifyId } = useParams();
+  const [track, setTrack] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [loadingTrack, setLoadingTrack] = useState(true);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTrackData = async () => {
+      setLoadingTrack(true);
+      setError(null);
+      try {
+        const trackData = await getTrack(spotifyId);
+        setTrack(trackData);
+      } catch (err) {
+        setError("Couldn't load track details.");
+      } finally {
+        setLoadingTrack(false);
+      }
+    };
+
+    const fetchReviews = async () => {
+      setLoadingReviews(true);
+      try {
+        const { data, error: dbError } = await supabase
+          .from('reviews')
+          .select('*, profiles (username, avatar_url), likes(count)')
+          .eq('spotify_album_id', `track_${spotifyId}`)
+          .order('created_at', { ascending: false });
+
+        if (dbError) throw dbError;
+        setReviews(data.map(r => ({ ...r, likes_count: r.likes?.[0]?.count || 0 })));
+      } catch (err) {
+        console.error("Error fetching reviews:", err);
+      } finally {
+        setLoadingReviews(false);
+      }
+    };
+
+    if (spotifyId) {
+      fetchTrackData();
+      fetchReviews();
+    }
+  }, [spotifyId]);
+
+  if (error) return (
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-red-400 mb-4">{error}</p>
+        <Link to="/search" className="text-[#8b5cf6] hover:text-white">&larr; Back to Search</Link>
+      </div>
+    </div>
+  );
+
+  const formatDuration = (ms) => {
+    if (!ms) return '0:00';
+    const minutes = Math.floor(ms / 60000);
+    const seconds = ((ms % 60000) / 1000).toFixed(0);
+    return `${minutes}:${seconds.padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="bg-background min-h-screen pt-32 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header */}
+        {loadingTrack ? (
+          <div className="flex flex-col md:flex-row gap-8 items-start mb-12 animate-pulse">
+            <div className="w-48 h-48 md:w-64 md:h-64 rounded-xl bg-[#141414] border border-[#27272a] flex-shrink-0"></div>
+            <div className="flex-1 py-4 w-full">
+              <div className="h-10 bg-[#141414] rounded w-3/4 mb-4"></div>
+              <div className="h-6 bg-[#141414] rounded w-1/2 mb-4"></div>
+              <div className="h-12 bg-[#141414] rounded w-40 mt-8"></div>
+            </div>
+          </div>
+        ) : track && (
+          <div className="flex flex-col md:flex-row gap-8 items-start mb-12">
+            <div className="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 rounded-xl overflow-hidden shadow-2xl border border-[#27272a] relative group bg-[#141414]">
+              {track.album?.images[0]?.url && (
+                <img src={track.album.images[0].url} alt={track.name} className="w-full h-full object-cover" />
+              )}
+            </div>
+            <div className="flex-1 flex flex-col xl:flex-row gap-8 justify-between w-full">
+              <div className="flex flex-col justify-center min-h-[12rem] md:min-h-[16rem] py-2 flex-1">
+                <span className="text-[#8b5cf6] uppercase tracking-wider font-bold text-sm mb-2">Track</span>
+                <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight leading-tight">
+                  {track.name}
+                </h1>
+                <p className="text-xl md:text-2xl text-[#9ca3af] mb-2 font-medium">
+                  {track.artists?.map((a, i) => (
+                    <React.Fragment key={a.id}>
+                      <Link to={`/artist/${a.id}`} className="hover:text-white transition-colors">{a.name}</Link>
+                      {i < track.artists.length - 1 && ', '}
+                    </React.Fragment>
+                  ))}
+                </p>
+                <Link to={`/album/${track.album?.id}`} className="text-[#6b7280] hover:text-[#8b5cf6] transition-colors mb-8 inline-block">
+                  From the album {track.album?.name}
+                </Link>
+                
+                <div className="flex flex-wrap items-center gap-4">
+                  <Link 
+                    to={`/write-review/track/${track.id}`}
+                    className="inline-flex items-center justify-center px-8 py-3 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-md font-medium transition-colors shadow-lg shadow-[#8b5cf6]/20"
+                  >
+                    Write a Review
+                  </Link>
+                  {track.external_urls?.spotify && (
+                    <a 
+                      href={track.external_urls.spotify}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center px-8 py-3 bg-[#1db954] hover:bg-[#1ed760] text-black rounded-md font-bold transition-colors shadow-lg shadow-[#1db954]/20 gap-2"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                      </svg>
+                      Listen on Spotify
+                    </a>
+                  )}
+                  {track.preview_url && (
+                    <audio controls src={track.preview_url} className="h-12 rounded-md" />
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex flex-col justify-center bg-[#141414] p-6 rounded-xl border border-[#27272a] shadow-xl w-full xl:w-72 flex-shrink-0 mt-4 xl:mt-0">
+                <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#8b5cf6]"></span>
+                  Track Info
+                </h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between items-center border-b border-[#27272a] pb-2">
+                    <span className="text-[#9ca3af]">Released</span>
+                    <span className="text-white font-medium">{track.album?.release_date}</span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-[#27272a] pb-2">
+                    <span className="text-[#9ca3af]">Duration</span>
+                    <span className="text-white font-medium">{formatDuration(track.duration_ms)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#9ca3af]">Explicit</span>
+                    <span className="text-white font-medium">{track.explicit ? 'Yes 🅴' : 'No'}</span>
+                  </div>
+                </div>
+                
+                {track.uri && (
+                  <div className="mt-auto border-t border-[#27272a] pt-4">
+                    <p className="text-[#9ca3af] text-xs uppercase tracking-wider mb-3 text-center font-semibold">Scan on Spotify</p>
+                    <img 
+                      src={`https://scannables.scdn.co/uri/plain/png/141414/white/320/${track.uri}`} 
+                      alt="Spotify Code" 
+                      className="w-full h-auto opacity-90 hover:opacity-100 transition-opacity"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Reviews */}
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-white">Community Reviews</h2>
+            {!loadingReviews && (
+              <span className="text-[#9ca3af] text-sm">{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</span>
+            )}
+          </div>
+          
+          {loadingReviews ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <SkeletonCard />
+              <SkeletonCard />
+            </div>
+          ) : reviews.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {reviews.map(review => <ReviewCard key={review.id} review={review} />)}
+            </div>
+          ) : (
+            <div className="bg-[#141414] border border-[#27272a] rounded-xl p-8 text-center">
+              <p className="text-[#9ca3af] mb-4">No reviews yet for this track.</p>
+              <Link 
+                to={`/write-review/track/${spotifyId}`}
+                className="text-[#8b5cf6] hover:text-white font-medium transition-colors"
+              >
+                Be the first to review it!
+              </Link>
+            </div>
+          )}
+        </div>
+
+      </div>
+    </div>
+  );
+}

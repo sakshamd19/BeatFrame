@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/spotify-token",
+      "destination": "https://accounts.spotify.com/api/token"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
