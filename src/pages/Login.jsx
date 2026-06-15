@@ -29,11 +29,10 @@ export default function Login() {
     try {
       let loginEmail = identifier;
 
-      // If it's a username (no @ symbol), call our secure RPC to get the email
+      // If it's a username (no @ symbol), call our RPC to get the email
       if (!identifier.includes('@')) {
-        const { data: emailData, error: rpcError } = await supabase.rpc('get_email_if_valid_password', { 
-          p_username: identifier.toLowerCase(), 
-          p_password: password 
+        const { data: emailData, error: rpcError } = await supabase.rpc('get_email_by_username', { 
+          p_username: identifier.toLowerCase()
         });
 
         if (rpcError || !emailData) {
