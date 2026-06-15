@@ -26,6 +26,8 @@ export default function Signup() {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [success, setSuccess] = useState(false);
   const [userId, setUserId] = useState(null);
 
@@ -60,6 +62,52 @@ export default function Signup() {
     }, 500);
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Username Uniqueness Debounce
+  useEffect(() => {
+    if (!formData.username) {
+      setUsernameAvailable(null);
+      setCheckingUsername(false);
+      return;
+    }
+
+    // Don't check if there's already a format error (e.g. spaces)
+    if (/\s/.test(formData.username) || formData.username !== formData.username.toLowerCase()) {
+      setUsernameAvailable(false);
+      return;
+    }
+
+    setCheckingUsername(true);
+    const timer = setTimeout(async () => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('username', formData.username)
+          .maybeSingle();
+        
+        if (error) throw error;
+        
+        // If data exists, the username is taken
+        if (data) {
+          setUsernameAvailable(false);
+          setErrors(prev => ({ ...prev, username: 'Username is already taken' }));
+        } else {
+          setUsernameAvailable(true);
+          // clear username error if it was 'taken'
+          if (errors.username === 'Username is already taken') {
+            setErrors(prev => ({ ...prev, username: '' }));
+          }
+        }
+      } catch (err) {
+        console.error("Error checking username:", err);
+      } finally {
+        setCheckingUsername(false);
+      }
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [formData.username]);
 
   const validateField = (name, value) => {
     let error = '';
@@ -109,6 +157,10 @@ export default function Signup() {
 
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (usernameAvailable === false) {
+      newErrors.username = 'Username is already taken';
     }
 
     setErrors(newErrors);
@@ -286,9 +338,21 @@ export default function Signup() {
                 </div>
                 <div className="relative group">
                   <input id="username" name="username" type="text" value={formData.username} onChange={handleChange} onBlur={handleBlur} required
-                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer" placeholder="Username" />
+                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 pr-8 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer" placeholder="Username" />
                   <label htmlFor="username" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Username</label>
                   <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
+                  
+                  {/* Status Indicator */}
+                  <div className="absolute right-0 top-3">
+                    {checkingUsername ? (
+                      <Loader2 className="w-5 h-5 text-[#94a3b8] animate-spin" />
+                    ) : usernameAvailable === true ? (
+                      <Check className="w-5 h-5 text-green-500" />
+                    ) : usernameAvailable === false && formData.username ? (
+                      <X className="w-5 h-5 text-red-500" />
+                    ) : null}
+                  </div>
+
                   {errors.username && <p className="mt-1 text-xs text-red-500">{errors.username}</p>}
                 </div>
               </div>
