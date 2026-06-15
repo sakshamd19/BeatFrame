@@ -7,7 +7,7 @@ import HeroOrbs from '../components/ui/HeroOrbs';
 import GradientText from '../components/ui/GradientText';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,8 +27,24 @@ export default function Login() {
     setError(null);
 
     try {
+      let loginEmail = identifier;
+
+      // If it's a username (no @ symbol), call our secure RPC to get the email
+      if (!identifier.includes('@')) {
+        const { data: emailData, error: rpcError } = await supabase.rpc('get_email_if_valid_password', { 
+          p_username: identifier.toLowerCase(), 
+          p_password: password 
+        });
+
+        if (rpcError || !emailData) {
+          throw new Error('Invalid username or password');
+        }
+        
+        loginEmail = emailData;
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: loginEmail,
         password,
       });
 
@@ -98,17 +114,17 @@ export default function Login() {
             <div className="space-y-6">
               <div className="relative group">
                 <input 
-                  id="email" 
-                  name="email" 
-                  type="email" 
+                  id="identifier" 
+                  name="identifier" 
+                  type="text" 
                   required 
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={identifier} 
+                  onChange={(e) => setIdentifier(e.target.value)}
                   className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer"
-                  placeholder="Email"
+                  placeholder="Username or Email"
                 />
-                <label htmlFor="email" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">
-                  Email address
+                <label htmlFor="identifier" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">
+                  Username or Email
                 </label>
                 <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
               </div>
