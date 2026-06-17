@@ -161,7 +161,7 @@ export default function ReviewCard({ review }) {
 
           {/* Bottom Action Bar */}
           <div className="flex flex-wrap items-center justify-between mt-auto pt-3 border-t border-white/5 gap-y-3 gap-x-2">
-            <Link to={`/profile/${profiles?.username}`} className="flex items-center gap-2 group/user z-10 min-w-0 flex-1" onClick={(e) => e.stopPropagation()}>
+            <Link to={`/profile/${profiles?.username}`} className="flex items-center gap-2 group/user z-10 max-w-full" onClick={(e) => e.stopPropagation()}>
               {profiles?.avatar_url ? (
                 <img src={profiles.avatar_url} alt={profiles.username} className="w-6 h-6 rounded-full object-cover border border-white/10 group-hover/user:border-primary transition-colors flex-shrink-0" />
               ) : (
@@ -169,13 +169,13 @@ export default function ReviewCard({ review }) {
                   <UserIcon className="w-3 h-3 text-[#94a3b8]" />
                 </div>
               )}
-              <span className="text-xs font-medium text-white group-hover/user:text-primary transition-colors truncate">
+              <span className="text-xs font-medium text-white group-hover/user:text-primary transition-colors truncate max-w-[90px] sm:max-w-[150px]">
                 {profiles?.username || 'Anonymous'}
               </span>
               <span className="text-xs text-[#475569] whitespace-nowrap flex-shrink-0">• {timeAgo}</span>
             </Link>
 
-            <div className="flex items-center gap-3 z-10 flex-shrink-0">
+            <div className="flex items-center gap-3 z-10 flex-shrink-0 ml-auto">
               {isAuthor && (
                 <div className="flex items-center gap-2 mr-2">
                   <button onClick={handleEdit} className="p-1.5 text-[#94a3b8] hover:text-primary transition-colors rounded-full hover:bg-white/5" title="Edit Review">
