@@ -28,8 +28,7 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { name: 'Explore', path: '/explore' },
-    ...(user ? [{ name: 'Rewind', path: '/rewind' }] : [])
+    { name: 'Explore', path: '/explore' }
   ];
 
   return (

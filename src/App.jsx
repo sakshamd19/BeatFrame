@@ -14,9 +14,6 @@ import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
-import SpotifyCallback from './pages/SpotifyCallback';
-import SpotifySync from './components/SpotifySync';
-import Rewind from './pages/Rewind';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 
@@ -36,14 +33,12 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <SpotifySync />
         <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col font-sans">
         <Navbar />
         <main className="flex-1 flex flex-col">
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/explore" element={<Explore />} />
-            <Route path="/rewind" element={<Rewind />} />
             <Route path="/search" element={<Search />} />
             <Route path="/album/:spotifyId" element={<AlbumDetail />} />
             <Route path="/track/:spotifyId" element={<TrackDetail />} />
@@ -54,7 +49,6 @@ function App() {
             <Route path="/settings" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/spotify-callback" element={<SpotifyCallback />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
