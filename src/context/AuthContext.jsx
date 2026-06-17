@@ -60,6 +60,9 @@ export function AuthProvider({ children }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    // Clear Spotify cached tokens on logout to prevent session persistence
+    localStorage.removeItem('spotify_access_token');
+    localStorage.removeItem('spotify_token_expiry');
     setUser(null);
     setProfile(null);
   };

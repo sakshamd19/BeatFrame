@@ -66,7 +66,8 @@ export default function EditReview() {
             rating: rating,
             review_text: reviewText
         })
-        .eq('id', reviewId);
+        .eq('id', reviewId)
+        .eq('user_id', user.id);
 
       if (updateError) throw updateError;
       

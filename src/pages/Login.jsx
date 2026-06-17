@@ -11,6 +11,11 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Brute Force Protection State
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState(null);
+  
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,6 +28,14 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Check lockout status
+    if (lockoutUntil && Date.now() < lockoutUntil) {
+      const remainingSeconds = Math.ceil((lockoutUntil - Date.now()) / 1000);
+      setError(`Too many failed attempts. Please try again in ${remainingSeconds} seconds.`);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -50,12 +63,26 @@ export default function Login() {
       if (error) throw error;
       
       if (data.session) {
+        // Reset brute force counters on success
+        setFailedAttempts(0);
+        setLockoutUntil(null);
+        
         const returnTo = location.state?.returnTo || '/explore';
         navigate(returnTo);
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('Invalid email or password');
+      
+      // Increment failed attempts
+      const newAttempts = failedAttempts + 1;
+      setFailedAttempts(newAttempts);
+      
+      if (newAttempts >= 5) {
+        setLockoutUntil(Date.now() + 30000); // 30 second lockout
+        setError('Too many failed attempts. Please try again in 30 seconds.');
+      } else {
+        setError('Invalid email or password');
+      }
     } finally {
       setLoading(false);
     }
@@ -153,8 +180,8 @@ export default function Login() {
 
             <button 
               type="submit" 
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-4 px-4 rounded-full font-bold text-white bg-gradient-to-r from-primary to-secondary hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] transition-all active:scale-[0.98] disabled:opacity-70"
+              disabled={loading || (lockoutUntil && Date.now() < lockoutUntil)}
+              className="w-full flex items-center justify-center gap-2 py-4 px-4 rounded-full font-bold text-white bg-gradient-to-r from-primary to-secondary hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                 <>

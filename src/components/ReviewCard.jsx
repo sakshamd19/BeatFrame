@@ -63,14 +63,15 @@ export default function ReviewCard({ review }) {
     
     if (window.confirm("Are you sure you want to delete this review?")) {
       try {
-        // 1. Try to delete associated likes first (in case of foreign key constraint without CASCADE)
-        await supabase.from('likes').delete().eq('review_id', review.id);
+        // 1. Only delete the current user's like if it exists (DB should handle cascading for other users' likes)
+        await supabase.from('likes').delete().eq('review_id', review.id).eq('user_id', currentUser.id);
 
-        // 2. Delete the review and return the deleted row to verify it worked
+        // 2. Delete the review, strictly enforcing ownership
         const { data, error } = await supabase
           .from('reviews')
           .delete()
           .eq('id', review.id)
+          .eq('user_id', currentUser.id)
           .select();
         
         if (error) {
