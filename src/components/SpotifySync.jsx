@@ -18,7 +18,7 @@ export default function SpotifySync() {
           .from('user_secrets')
           .select('spotify_refresh_token')
           .eq('id', user.id)
-          .single();
+          .maybeSingle();
 
         if (!secret?.spotify_refresh_token) return;
 

@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { Loader2, Search, X, Check, Save } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { searchSpotify } from '../services/spotify';
+import { getSpotifyAuthUrl } from '../services/spotifyAuth';
 
 const GENRES = [
   'Hip Hop', 'Pop', 'R&B', 'Rock', 'Electronic', 
@@ -322,9 +323,7 @@ export default function EditProfile() {
                 <button
                   type="button"
                   onClick={() => {
-                    import('../services/spotifyAuth').then(m => {
-                      window.location.href = m.getSpotifyAuthUrl();
-                    });
+                    window.location.href = getSpotifyAuthUrl();
                   }}
                   className={`px-6 py-2 rounded-full font-bold transition-colors whitespace-nowrap ${
                     isSpotifyConnected 

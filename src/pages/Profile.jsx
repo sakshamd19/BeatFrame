@@ -27,7 +27,7 @@ export default function Profile() {
           .from('profiles')
           .select('*')
           .eq('username', username)
-          .single();
+          .maybeSingle();
 
         if (profileError) {
           if (profileError.code === 'PGRST116') throw new Error('User not found');
@@ -59,7 +59,7 @@ export default function Profile() {
         // 3. Fetch Stats
         const { count: followersCount } = await supabase
           .from('followers')
-          .select('*', { count: 'exact', head: true })
+          .select('id', { count: 'exact', head: true })
           .eq('following_id', profileData.id);
 
         const { count: followingCount } = await supabase

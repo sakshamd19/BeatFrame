@@ -21,7 +21,7 @@ export default function ReviewCard({ review }) {
         .select('id')
         .eq('review_id', review.id)
         .eq('user_id', currentUser.id)
-        .single();
+        .maybeSingle();
       setIsLiked(!!data);
     };
     checkLike();
