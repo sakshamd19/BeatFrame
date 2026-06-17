@@ -71,8 +71,8 @@ export default function Explore() {
 
   const filteredReviews = allReviews.filter(review => {
     if (filter === 'All') return true;
-    if (filter === 'Bangers') return review.rating === 'Banger';
-    return review.rating === filter;
+    if (filter === 'Bangers') return review.rating?.toLowerCase() === 'banger';
+    return review.rating?.toLowerCase() === filter.toLowerCase();
   });
 
   if (loading) {
