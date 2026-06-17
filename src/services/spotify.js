@@ -160,3 +160,7 @@ export const getArtistTopTracks = async (artistName, market = 'IN') => {
 export const getArtistAlbums = async (artistId, market = 'IN') => {
   return fetchSpotifyAPI(`/artists/${artistId}/albums?market=${market}`);
 };
+
+export const getRelatedArtists = async (artistId) => {
+  return fetchSpotifyAPI(`/artists/${artistId}/related-artists`);
+};

@@ -4,19 +4,75 @@ import AlbumCard from '../components/AlbumCard';
 import ArtistCard from '../components/ArtistCard';
 import TrackRow from '../components/TrackRow';
 import SkeletonGrid from '../components/SkeletonGrid';
-import { searchSpotify } from '../services/spotify';
+import { searchSpotify, getRelatedArtists } from '../services/spotify';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
 import { Music } from 'lucide-react';
 import GradientText from '../components/ui/GradientText';
 
-const SUGGESTIONS = ["Arijit Singh", "The Weeknd", "AP Dhillon", "Coldplay", "Diljit Dosanjh", "Drake"];
+const DEFAULT_SUGGESTIONS = ["Arijit Singh", "The Weeknd", "AP Dhillon", "Coldplay", "Diljit Dosanjh", "Drake"];
 const TABS = ['All', 'Albums', 'Artists', 'Tracks'];
 
 export default function Search() {
+  const { user } = useAuth();
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState('All');
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [suggestions, setSuggestions] = useState(DEFAULT_SUGGESTIONS);
+  const [favoriteArtists, setFavoriteArtists] = useState([]);
+
+  // Fetch user's favorite artists
+  useEffect(() => {
+    if (!user) return;
+    
+    const fetchFavorites = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('favorite_artists')
+          .eq('id', user.id)
+          .single();
+          
+        if (error) throw error;
+        
+        if (data?.favorite_artists && data.favorite_artists.length > 0) {
+          setFavoriteArtists(data.favorite_artists);
+        }
+      } catch (err) {
+        console.error("Error fetching favorite artists:", err);
+      }
+    };
+    
+    fetchFavorites();
+  }, [user]);
+
+  // Update suggestions dynamically based on favorite artists
+  useEffect(() => {
+    const updateSuggestions = async () => {
+      if (favoriteArtists.length === 0) return;
+      
+      try {
+        const randomArtist = favoriteArtists[Math.floor(Math.random() * favoriteArtists.length)];
+        const related = await getRelatedArtists(randomArtist.id);
+        
+        if (related?.artists?.length > 0) {
+          const shuffled = related.artists.sort(() => 0.5 - Math.random());
+          const newSuggestions = shuffled.slice(0, 6).map(a => a.name);
+          setSuggestions(newSuggestions);
+        }
+      } catch (err) {
+        console.error("Error updating suggestions:", err);
+      }
+    };
+
+    if (favoriteArtists.length > 0) {
+      updateSuggestions();
+      const interval = setInterval(updateSuggestions, 10 * 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [favoriteArtists]);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -97,7 +153,7 @@ export default function Search() {
           <Music className="w-20 h-20 text-primary mx-auto mb-8 opacity-80" />
           <h2 className="text-4xl font-display font-bold text-white mb-10 tracking-tight">Start typing to discover <GradientText>music</GradientText></h2>
           <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
-            {SUGGESTIONS.map(s => (
+            {suggestions.map(s => (
               <button 
                 key={s} 
                 onClick={() => handleSuggestionClick(s)}
