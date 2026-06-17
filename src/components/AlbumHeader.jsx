@@ -79,7 +79,7 @@ export default function AlbumHeader({ album }) {
               className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[220px] bg-[#fa243c] hover:bg-[#e02036] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#fa243c]/20 gap-2"
             >
               <Music className="w-5 h-5" />
-              Apple Music
+              Listen on Apple Music
             </a>
 
             <a 
@@ -89,7 +89,7 @@ export default function AlbumHeader({ album }) {
               className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[220px] bg-[#00a8e1] hover:bg-[#0096c9] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#00a8e1]/20 gap-2"
             >
               <Headphones className="w-5 h-5" />
-              Amazon Music
+              Listen on Amazon Music
             </a>
           </div>
         </div>
