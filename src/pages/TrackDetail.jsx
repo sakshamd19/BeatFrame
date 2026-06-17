@@ -184,17 +184,6 @@ export default function TrackDetail() {
                     <span className="text-white font-medium">{track.explicit ? 'Yes 🅴' : 'No'}</span>
                   </div>
                 </div>
-                
-                {track.uri && (
-                  <div className="mt-auto border-t border-white/5 pt-4 mt-6">
-                    <p className="text-[#9ca3af] text-xs uppercase tracking-wider mb-3 text-center font-semibold">Scan on Spotify</p>
-                    <img 
-                      src={`https://scannables.scdn.co/uri/plain/png/141414/white/320/${track.uri}`} 
-                      alt="Spotify Code" 
-                      className="w-full h-auto opacity-90 hover:opacity-100 transition-opacity"
-                    />
-                  </div>
-                )}
               </div>
             </div>
           </div>
