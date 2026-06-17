@@ -5,23 +5,23 @@ export default function ReviewStats({ reviews }) {
 
   const counts = {
     skip: reviews.filter(r => r.rating === 'skip').length,
-    timepass: reviews.filter(r => r.rating === 'timepass').length,
-    go_for_it: reviews.filter(r => r.rating === 'go_for_it').length,
-    perfection: reviews.filter(r => r.rating === 'perfection').length,
+    decent: reviews.filter(r => r.rating === 'decent').length,
+    fire: reviews.filter(r => r.rating === 'fire').length,
+    banger: reviews.filter(r => r.rating === 'banger').length,
   };
 
   const total = reviews.length;
 
   const percentages = {
     skip: Math.round((counts.skip / total) * 100),
-    timepass: Math.round((counts.timepass / total) * 100),
-    go_for_it: Math.round((counts.go_for_it / total) * 100),
-    perfection: Math.round((counts.perfection / total) * 100),
+    decent: Math.round((counts.decent / total) * 100),
+    fire: Math.round((counts.fire / total) * 100),
+    banger: Math.round((counts.banger / total) * 100),
   };
 
   // Find category with highest percentage for the center display
-  let highestCat = 'go_for_it';
-  let highestCount = counts.go_for_it;
+  let highestCat = 'banger';
+  let highestCount = counts.banger;
   
   Object.keys(counts).forEach(key => {
     if (counts[key] > highestCount) {
@@ -31,17 +31,17 @@ export default function ReviewStats({ reviews }) {
   });
 
   const colors = {
-    skip: '#ef4444',      // Red
-    timepass: '#eab308',  // Yellow
-    go_for_it: '#10b981', // Green
-    perfection: '#a855f7' // Purple
+    skip: '#6b7280',     // Gray
+    decent: '#3b82f6',   // Blue
+    fire: '#f97316',     // Orange
+    banger: '#8b5cf6'    // Purple
   };
 
   const labels = {
     skip: 'Skip',
-    timepass: 'Timepass',
-    go_for_it: 'Go for it',
-    perfection: 'Perfection'
+    decent: 'Decent',
+    fire: 'Fire',
+    banger: 'Banger'
   };
 
   // SVG calculations for a semicircular donut (top half of circle)
@@ -58,9 +58,9 @@ export default function ReviewStats({ reviews }) {
   // Convert counts to lengths on the semicircle
   const lengths = {
     skip: (counts.skip / total) * semiCircumference,
-    timepass: (counts.timepass / total) * semiCircumference,
-    go_for_it: (counts.go_for_it / total) * semiCircumference,
-    perfection: (counts.perfection / total) * semiCircumference,
+    decent: (counts.decent / total) * semiCircumference,
+    fire: (counts.fire / total) * semiCircumference,
+    banger: (counts.banger / total) * semiCircumference,
   };
 
   // Calculate offsets. 
@@ -68,9 +68,9 @@ export default function ReviewStats({ reviews }) {
   // To draw a semicircle from left to right (9 o'clock to 3 o'clock), 
   // we rotate the circle -180 degrees.
   const offsetSkip = 0;
-  const offsetTimepass = lengths.skip;
-  const offsetGoForIt = offsetTimepass + lengths.timepass;
-  const offsetPerfection = offsetGoForIt + lengths.go_for_it;
+  const offsetDecent = lengths.skip;
+  const offsetFire = offsetDecent + lengths.decent;
+  const offsetBanger = offsetFire + lengths.fire;
 
   const createSegment = (color, length, offset) => {
     if (length === 0) return null;
@@ -114,9 +114,9 @@ export default function ReviewStats({ reviews }) {
           />
           {/* Segments */}
           {createSegment(colors.skip, lengths.skip, offsetSkip)}
-          {createSegment(colors.timepass, lengths.timepass, offsetTimepass)}
-          {createSegment(colors.go_for_it, lengths.go_for_it, offsetGoForIt)}
-          {createSegment(colors.perfection, lengths.perfection, offsetPerfection)}
+          {createSegment(colors.decent, lengths.decent, offsetDecent)}
+          {createSegment(colors.fire, lengths.fire, offsetFire)}
+          {createSegment(colors.banger, lengths.banger, offsetBanger)}
         </svg>
 
         {/* Center Text */}
@@ -135,14 +135,14 @@ export default function ReviewStats({ reviews }) {
 
       {/* Legend */}
       <div className="flex flex-wrap justify-center gap-6 text-sm font-medium border-b border-white/5 pb-8 w-full max-w-2xl">
-        {['skip', 'timepass', 'go_for_it', 'perfection'].map((key) => (
+        {['skip', 'decent', 'fire', 'banger'].map((key) => (
           <div key={key} className="flex items-center gap-2">
             <span 
               className="w-3 h-3 rounded-full" 
               style={{ backgroundColor: colors[key] }}
             />
             <span className="text-[#9ca3af]">{labels[key]}</span>
-            <span className="text-white ml-1">{percentages[key]}%</span>
+            <span className="text-white ml-1">{percentages[key] || 0}%</span>
           </div>
         ))}
       </div>

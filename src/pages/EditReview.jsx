@@ -94,10 +94,10 @@ export default function EditReview() {
   };
 
   const ratings = [
-    { value: 'skip', label: 'Skip', activeClass: 'bg-[#ef4444] text-white', borderClass: 'border-[#ef4444]' },
-    { value: 'timepass', label: 'Timepass', activeClass: 'bg-[#eab308] text-black', borderClass: 'border-[#eab308]' },
-    { value: 'go_for_it', label: 'Go for it', activeClass: 'bg-[#10b981] text-white', borderClass: 'border-[#10b981]' },
-    { value: 'perfection', label: 'Perfection', activeClass: 'bg-[#a855f7] text-white', borderClass: 'border-[#a855f7]' }
+    { value: 'skip', label: 'Skip', activeClass: 'bg-[#6b7280] text-white', borderClass: 'border-[#6b7280]' },
+    { value: 'decent', label: 'Decent', activeClass: 'bg-[#3b82f6] text-white', borderClass: 'border-[#3b82f6]' },
+    { value: 'fire', label: 'Fire', activeClass: 'bg-[#f97316] text-white', borderClass: 'border-[#f97316]' },
+    { value: 'banger', label: 'Banger', activeClass: 'bg-[#8b5cf6] text-white', borderClass: 'border-[#8b5cf6]' }
   ];
 
   if (loading) return (

@@ -19,10 +19,10 @@ export default function InlineReviewForm({ item, type, onSuccess }) {
   }
 
   const ratings = [
-    { id: 'skip', label: 'Skip', hoverClass: 'hover:text-[#ef4444]', activeClass: 'bg-[#ef4444] text-white' },
-    { id: 'timepass', label: 'Timepass', hoverClass: 'hover:text-[#eab308]', activeClass: 'bg-[#eab308] text-black' },
-    { id: 'go_for_it', label: 'Go for it', hoverClass: 'hover:text-[#10b981]', activeClass: 'bg-[#10b981] text-white' },
-    { id: 'perfection', label: 'Perfection', hoverClass: 'hover:text-[#a855f7]', activeClass: 'bg-[#a855f7] text-white' },
+    { id: 'skip', label: 'Skip', hoverClass: 'hover:text-[#6b7280]', activeClass: 'bg-[#6b7280] text-white' },
+    { id: 'decent', label: 'Decent', hoverClass: 'hover:text-[#3b82f6]', activeClass: 'bg-[#3b82f6] text-white' },
+    { id: 'fire', label: 'Fire', hoverClass: 'hover:text-[#f97316]', activeClass: 'bg-[#f97316] text-white' },
+    { id: 'banger', label: 'Banger', hoverClass: 'hover:text-[#8b5cf6]', activeClass: 'bg-[#8b5cf6] text-white' },
   ];
 
   const handleSubmit = async (e) => {
