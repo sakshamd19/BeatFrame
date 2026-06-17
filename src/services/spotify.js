@@ -1,5 +1,4 @@
-const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '';
-const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET || '';
+// Tokens are fetched from our secure serverless backend
 
 // Token caching in localStorage
 const CACHE_KEY = 'spotify_token';
@@ -15,10 +14,7 @@ export const getSpotifyToken = async () => {
     return cachedToken;
   }
 
-  if (!clientId || !clientSecret) {
-    console.error("Spotify credentials missing in .env");
-    return null;
-  }
+  // If a request is already in progress, return that promise
 
   // If a request is already in progress, return that promise
   if (tokenPromise) return tokenPromise;
@@ -26,12 +22,7 @@ export const getSpotifyToken = async () => {
   tokenPromise = (async () => {
     try {
       const response = await fetch('/api/spotify-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret)
-        },
-        body: 'grant_type=client_credentials'
+        method: 'POST'
       });
 
       if (!response.ok) throw new Error('Failed to fetch Spotify token');

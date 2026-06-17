@@ -173,8 +173,13 @@ export default function EditProfile() {
       setSaving(false);
       return;
     }
-    if (/\s/.test(formData.username)) {
-      setError("Username cannot contain spaces");
+    if (!/^[a-z0-9_]{3,20}$/.test(formData.username)) {
+      setError("Username must be 3-20 characters: lowercase, numbers, underscores only");
+      setSaving(false);
+      return;
+    }
+    if (formData.bio && formData.bio.length > 500) {
+      setError("Bio cannot exceed 500 characters");
       setSaving(false);
       return;
     }
@@ -288,11 +293,15 @@ export default function EditProfile() {
                 <label className="block text-sm font-medium text-[#9ca3af] mb-2" htmlFor="bio">Bio</label>
                 <textarea 
                   id="bio" rows={4}
+                  maxLength={500}
                   value={formData.bio} 
                   onChange={(e) => setFormData({...formData, bio: e.target.value})}
                   placeholder="Tell the world about your music taste..."
                   className="w-full px-4 py-3 border border-[#27272a] rounded-lg bg-[#0a0a0a] text-white placeholder-[#6b7280] focus:outline-none focus:border-[#8b5cf6] transition-colors resize-none"
                 />
+                <div className="text-right mt-1 text-xs text-[#6b7280]">
+                  {formData.bio.length}/500
+                </div>
               </div>
 
               {/* Spotify OAuth Section */}

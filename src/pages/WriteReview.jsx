@@ -63,6 +63,11 @@ export default function WriteReview() {
       return;
     }
 
+    if (reviewText && reviewText.length > 2000) {
+      setError("Review cannot exceed 2000 characters.");
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
 
@@ -187,11 +192,15 @@ export default function WriteReview() {
             <textarea
               id="review"
               rows={6}
+              maxLength={2000}
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
               placeholder={`What did you think of this ${isTrack ? 'track' : 'album'}?`}
               className="block w-full p-4 bg-[#141414] border-2 border-[#27272a] rounded-xl text-white placeholder-[#6b7280] focus:outline-none focus:border-[#8b5cf6] focus:ring-1 focus:ring-[#8b5cf6] resize-none"
             />
+            <div className="text-right mt-1 text-xs text-[#6b7280]">
+              {reviewText.length}/2000
+            </div>
           </div>
 
           {/* Submit */}

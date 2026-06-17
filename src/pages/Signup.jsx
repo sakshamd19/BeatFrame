@@ -30,6 +30,15 @@ export default function Signup() {
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [success, setSuccess] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0 });
+  const [captchaInput, setCaptchaInput] = useState('');
+
+  useEffect(() => {
+    setCaptcha({
+      num1: Math.floor(Math.random() * 10) + 1,
+      num2: Math.floor(Math.random() * 10) + 1
+    });
+  }, []);
 
   // Step 2 State
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -114,8 +123,7 @@ export default function Signup() {
     if (name === 'fullName' && !value) error = 'Full name is required';
     if (name === 'username') {
       if (!value) error = 'Username is required';
-      else if (/\s/.test(value)) error = 'Username cannot contain spaces';
-      else if (value !== value.toLowerCase()) error = 'Username must be lowercase';
+      else if (!/^[a-z0-9_]{3,20}$/.test(value)) error = 'Must be 3-20 chars: lowercase, numbers, underscores';
     }
     if (name === 'email') {
       if (!value) error = 'Email is required';
@@ -124,6 +132,7 @@ export default function Signup() {
     if (name === 'password') {
       if (!value) error = 'Password is required';
       else if (value.length < 8) error = 'Password must be at least 8 characters';
+      else if (!/\d/.test(value)) error = 'Password must contain at least 1 number';
     }
     if (name === 'confirmPassword') {
       if (value !== formData.password) error = 'Passwords do not match';
@@ -137,10 +146,8 @@ export default function Signup() {
     
     if (!formData.username) {
       newErrors.username = 'Username is required';
-    } else if (/\s/.test(formData.username)) {
-      newErrors.username = 'Username cannot contain spaces';
-    } else if (formData.username !== formData.username.toLowerCase()) {
-      newErrors.username = 'Username must be lowercase';
+    } else if (!/^[a-z0-9_]{3,20}$/.test(formData.username)) {
+      newErrors.username = 'Must be 3-20 chars: lowercase, numbers, underscores';
     }
     
     if (!formData.email) {
@@ -153,10 +160,16 @@ export default function Signup() {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
+    } else if (!/\d/.test(formData.password)) {
+      newErrors.password = 'Password must contain at least 1 number';
     }
 
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (parseInt(captchaInput, 10) !== captcha.num1 + captcha.num2) {
+      newErrors.captcha = 'Incorrect security question answer';
     }
 
     if (usernameAvailable === false) {
@@ -379,6 +392,18 @@ export default function Signup() {
                 <label htmlFor="confirmPassword" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Confirm Password</label>
                 <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
                 {errors.confirmPassword && <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>}
+              </div>
+
+              {/* Math Captcha for Bot Protection */}
+              <div className="relative group pt-2 flex gap-4 items-end">
+                <div className="text-white font-bold pb-2 border-b-2 border-transparent w-1/2">
+                  What is {captcha.num1} + {captcha.num2}?
+                </div>
+                <div className="relative w-1/2">
+                  <input id="captcha" name="captcha" type="number" value={captchaInput} onChange={(e) => { setCaptchaInput(e.target.value); setErrors(prev => ({...prev, captcha: ''})); }} required
+                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-[#94a3b8] focus:ring-0 focus:border-secondary" placeholder="Answer" />
+                  {errors.captcha && <p className="mt-1 text-xs text-red-500 absolute w-full">{errors.captcha}</p>}
+                </div>
               </div>
 
               <button 
