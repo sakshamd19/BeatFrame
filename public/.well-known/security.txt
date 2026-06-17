@@ -1,0 +1,4 @@
+Contact: mailto:security@beatframe.com
+Expires: 2027-06-18T00:00:00.000Z
+Preferred-Languages: en
+Acknowledgments: https://beatframe.com/security/hall-of-fame

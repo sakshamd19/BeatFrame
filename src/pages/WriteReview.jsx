@@ -23,6 +23,10 @@ export default function WriteReview() {
     const fetchData = async () => {
 
       try {
+        if (!/^[a-zA-Z0-9]{22}$/.test(spotifyId)) {
+          throw new Error('Invalid Spotify ID format');
+        }
+
         const itemPrefix = type === 'track' ? `track_${spotifyId}` : spotifyId;
         
         // 1. Check if review already exists

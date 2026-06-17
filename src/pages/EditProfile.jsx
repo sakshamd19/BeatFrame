@@ -26,6 +26,14 @@ export default function EditProfile() {
     spotify_url: ''
   });
 
+  const [authForm, setAuthForm] = useState({
+    email: '',
+    newPassword: '',
+    currentPassword: ''
+  });
+  const [updatingAuth, setUpdatingAuth] = useState(false);
+  const [authMessage, setAuthMessage] = useState(null);
+
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -56,6 +64,8 @@ export default function EditProfile() {
           avatar_url: profileData.avatar_url || '',
           spotify_url: profileData.spotify_url || ''
         });
+        
+        setAuthForm(prev => ({ ...prev, email: user.email || '' }));
         
         setSelectedGenres(profileData.favorite_genres || []);
         setSelectedArtists(profileData.favorite_artists || []);
@@ -204,6 +214,47 @@ export default function EditProfile() {
     }
   };
 
+  const handleAuthUpdate = async (e) => {
+    e.preventDefault();
+    if (!authForm.currentPassword) {
+      setAuthMessage({ type: 'error', text: 'Current password is required to update credentials.' });
+      return;
+    }
+    setUpdatingAuth(true);
+    setAuthMessage(null);
+
+    try {
+      // 1. Re-authenticate to ensure current password is correct (Anti-Takeover)
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: authForm.currentPassword
+      });
+
+      if (signInError) throw new Error('Incorrect current password.');
+
+      // 2. Update user attributes
+      const updates = {};
+      if (authForm.email && authForm.email !== user.email) updates.email = authForm.email;
+      if (authForm.newPassword) {
+        if (authForm.newPassword.length < 8) throw new Error('New password must be at least 8 characters');
+        updates.password = authForm.newPassword;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        const { error: updateError } = await supabase.auth.updateUser(updates);
+        if (updateError) throw updateError;
+        setAuthMessage({ type: 'success', text: 'Credentials updated. Check your email to confirm changes if applicable.' });
+        setAuthForm(prev => ({ ...prev, newPassword: '', currentPassword: '' }));
+      } else {
+        setAuthMessage({ type: 'error', text: 'No changes provided.' });
+      }
+    } catch (err) {
+      setAuthMessage({ type: 'error', text: err.message });
+    } finally {
+      setUpdatingAuth(false);
+    }
+  };
+
   if (loading) return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-[#0a0a0a]">
       <Loader2 className="w-8 h-8 text-[#8b5cf6] animate-spin" />
@@ -221,6 +272,65 @@ export default function EditProfile() {
             {error}
           </div>
         )}
+
+        {/* Account Security Section */}
+        <form onSubmit={handleAuthUpdate} className="mb-12 bg-[#141414] border border-red-500/20 rounded-xl p-6 md:p-8 space-y-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4">
+            <div className="bg-red-500/10 text-red-400 text-xs font-bold px-2 py-1 rounded border border-red-500/20">SECURITY</div>
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Account Credentials</h2>
+          <p className="text-sm text-[#9ca3af] mb-6">Update your login email or password. Requires current password verification.</p>
+          
+          {authMessage && (
+            <div className={`p-4 rounded-md text-sm border ${authMessage.type === 'success' ? 'bg-green-900/30 border-green-500/50 text-green-300' : 'bg-red-900/30 border-red-500/50 text-red-300'}`}>
+              {authMessage.text}
+            </div>
+          )}
+
+          <div className="space-y-6 max-w-lg">
+            <div>
+              <label className="block text-sm font-medium text-[#9ca3af] mb-2" htmlFor="authEmail">Email Address</label>
+              <input 
+                id="authEmail" type="email" 
+                value={authForm.email} 
+                onChange={(e) => setAuthForm({...authForm, email: e.target.value})}
+                className="w-full px-4 py-3 border border-[#27272a] rounded-lg bg-[#0a0a0a] text-white focus:outline-none focus:border-red-500/50 transition-colors"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-[#9ca3af] mb-2" htmlFor="newPassword">New Password (optional)</label>
+              <input 
+                id="newPassword" type="password" 
+                value={authForm.newPassword} 
+                onChange={(e) => setAuthForm({...authForm, newPassword: e.target.value})}
+                placeholder="Leave blank to keep current"
+                className="w-full px-4 py-3 border border-[#27272a] rounded-lg bg-[#0a0a0a] text-white focus:outline-none focus:border-red-500/50 transition-colors"
+              />
+            </div>
+
+            <div className="border-t border-[#27272a] pt-6">
+              <label className="block text-sm font-medium text-white mb-2" htmlFor="currentPassword">Current Password (Required)</label>
+              <input 
+                id="currentPassword" type="password" 
+                value={authForm.currentPassword} 
+                onChange={(e) => setAuthForm({...authForm, currentPassword: e.target.value})}
+                required
+                placeholder="Verify it's you"
+                className="w-full px-4 py-3 border border-red-500/30 rounded-lg bg-red-950/10 text-white focus:outline-none focus:border-red-500 transition-colors"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={updatingAuth}
+              className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-colors shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center gap-2"
+            >
+              {updatingAuth && <Loader2 className="w-4 h-4 animate-spin" />}
+              Update Credentials
+            </button>
+          </div>
+        </form>
 
         <form onSubmit={handleSave} className="space-y-12">
           

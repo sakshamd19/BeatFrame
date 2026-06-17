@@ -21,6 +21,10 @@ export default function EditReview() {
     const fetchData = async () => {
 
       try {
+        if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(reviewId)) {
+          throw new Error('Invalid Review ID format');
+        }
+
         const { data: reviewData, error: reviewError } = await supabase
           .from('reviews')
           .select('*')

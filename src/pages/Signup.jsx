@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Music, Loader2, Search, X, Check, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { searchSpotify } from '../services/spotify';
+import { Turnstile } from '@marsidev/react-turnstile';
 import HeroOrbs from '../components/ui/HeroOrbs';
 import GradientText from '../components/ui/GradientText';
 
@@ -30,15 +31,7 @@ export default function Signup() {
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [success, setSuccess] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0 });
-  const [captchaInput, setCaptchaInput] = useState('');
-
-  useEffect(() => {
-    setCaptcha({
-      num1: Math.floor(Math.random() * 10) + 1,
-      num2: Math.floor(Math.random() * 10) + 1
-    });
-  }, []);
+  const [turnstileToken, setTurnstileToken] = useState(null);
 
   // Step 2 State
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -168,10 +161,6 @@ export default function Signup() {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    if (parseInt(captchaInput, 10) !== captcha.num1 + captcha.num2) {
-      newErrors.captcha = 'Incorrect security question answer';
-    }
-
     if (usernameAvailable === false) {
       newErrors.username = 'Username is already taken';
     }
@@ -196,11 +185,29 @@ export default function Signup() {
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    
+    if (!turnstileToken) {
+      setErrors({ submit: 'Please complete the security check.' });
+      return;
+    }
 
     setLoading(true);
     setErrors({});
     
     try {
+      // 1. Verify Turnstile Server-Side
+      const verifyRes = await fetch('/api/verify-turnstile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: turnstileToken })
+      });
+      const verifyData = await verifyRes.json();
+      
+      if (!verifyData.success) {
+        throw new Error(verifyData.error || 'Security verification failed. Please try again.');
+      }
+
+      // 2. Proceed with Supabase Auth
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -394,16 +401,14 @@ export default function Signup() {
                 {errors.confirmPassword && <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>}
               </div>
 
-              {/* Math Captcha for Bot Protection */}
-              <div className="relative group pt-2 flex gap-4 items-end">
-                <div className="text-white font-bold pb-2 border-b-2 border-transparent w-1/2">
-                  What is {captcha.num1} + {captcha.num2}?
-                </div>
-                <div className="relative w-1/2">
-                  <input id="captcha" name="captcha" type="number" value={captchaInput} onChange={(e) => { setCaptchaInput(e.target.value); setErrors(prev => ({...prev, captcha: ''})); }} required
-                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-[#94a3b8] focus:outline-none focus:ring-0 focus:border-secondary" placeholder="Answer" />
-                  {errors.captcha && <p className="mt-1 text-xs text-red-500 absolute w-full">{errors.captcha}</p>}
-                </div>
+              {/* Turnstile Bot Protection */}
+              <div className="pt-2 flex justify-center">
+                <Turnstile 
+                  siteKey={import.meta.env.VITE_TURNSTILE_SITEKEY || '1x00000000000000000000AA'} // dummy key fallback for dev
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onError={() => setErrors({ submit: 'Turnstile failed to load or verify.' })}
+                  options={{ theme: 'dark' }}
+                />
               </div>
 
               <button 
