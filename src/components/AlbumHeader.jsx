@@ -22,12 +22,12 @@ export default function AlbumHeader({ album }) {
   albumLabel = albumLabel || 'Independent';
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 items-start mb-12">
-      <div className="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 rounded-xl overflow-hidden shadow-2xl border border-[#27272a]">
+    <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left mb-12">
+      <div className="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 rounded-xl overflow-hidden shadow-[0_0_30px_rgba(124,58,237,0.15)] border border-white/5">
         <img src={imageUrl} alt={album.name} className="w-full h-full object-cover" />
       </div>
-      <div className="flex-1 flex flex-col xl:flex-row gap-8 justify-between w-full">
-        <div className="flex flex-col justify-center min-h-[12rem] md:min-h-[16rem] py-2 flex-1">
+      <div className="flex-1 flex flex-col xl:flex-row gap-8 justify-between w-full items-center md:items-start xl:items-center">
+        <div className="flex flex-col justify-center min-h-[12rem] md:min-h-[16rem] py-2 flex-1 w-full">
           <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight leading-tight">
             {album.name}
           </h1>
@@ -37,7 +37,7 @@ export default function AlbumHeader({ album }) {
           <p className="text-sm text-[#6b7280] mb-8 uppercase tracking-wider font-semibold">
             {releaseYear} • {album.total_tracks} tracks
           </p>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 w-full">
             <Link 
               to={`/write-review/album/${album.id}`}
               className="inline-flex items-center justify-center px-8 py-3 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-md font-medium transition-colors shadow-lg shadow-[#8b5cf6]/20"
@@ -60,17 +60,17 @@ export default function AlbumHeader({ album }) {
           </div>
         </div>
 
-        <div className="flex flex-col justify-center bg-[#141414] p-6 rounded-xl border border-[#27272a] shadow-xl w-full xl:w-72 flex-shrink-0 mt-4 xl:mt-0">
+        <div className="flex flex-col justify-center bg-surface1 p-6 rounded-2xl border border-white/5 shadow-xl w-full xl:w-72 flex-shrink-0 mt-4 xl:mt-0 text-left">
           <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#8b5cf6]"></span>
+            <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(124,58,237,0.8)]"></span>
             Album Info
           </h3>
           <div className="space-y-4 text-sm">
-            <div className="flex justify-between items-center border-b border-[#27272a] pb-2">
+            <div className="flex justify-between items-center border-b border-white/5 pb-2">
               <span className="text-[#9ca3af]">Released</span>
               <span className="text-white font-medium">{album.release_date}</span>
             </div>
-            <div className="flex justify-between items-center border-b border-[#27272a] pb-2">
+            <div className="flex justify-between items-center border-b border-white/5 pb-2">
               <span className="text-[#9ca3af]">Label</span>
               <span className="text-white font-medium truncate ml-4" title={albumLabel}>{albumLabel}</span>
             </div>
@@ -81,7 +81,7 @@ export default function AlbumHeader({ album }) {
           </div>
           
           {album.uri && (
-            <div className="mt-auto border-t border-[#27272a] pt-4 mt-6">
+            <div className="mt-auto border-t border-white/5 pt-4 mt-6">
               <p className="text-[#9ca3af] text-xs uppercase tracking-wider mb-3 text-center font-semibold">Scan on Spotify</p>
               <img 
                 src={`https://scannables.scdn.co/uri/plain/png/141414/white/320/${album.uri}`} 

@@ -78,13 +78,13 @@ export default function ArtistDetail() {
             </div>
           </div>
         ) : artist && (
-          <div className="flex flex-col md:flex-row gap-8 items-start mb-16">
-            <div className="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 rounded-full overflow-hidden shadow-2xl border-4 border-[#27272a] mx-auto md:mx-0">
+          <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left mb-16">
+            <div className="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 rounded-full overflow-hidden shadow-[0_0_30px_rgba(124,58,237,0.15)] border-4 border-surface2 mx-auto md:mx-0">
               <img src={artist.images?.[0]?.url || 'https://via.placeholder.com/300'} alt={artist.name} className="w-full h-full object-cover" />
             </div>
             
-            <div className="flex-1 flex flex-col xl:flex-row gap-8 justify-between w-full">
-              <div className="flex flex-col justify-center py-2 flex-1 text-center md:text-left">
+            <div className="flex-1 flex flex-col xl:flex-row gap-8 justify-between w-full items-center md:items-start xl:items-center">
+              <div className="flex flex-col justify-center py-2 flex-1 w-full text-center md:text-left">
                 <span className="text-[#8b5cf6] uppercase tracking-wider font-bold text-sm mb-2">Artist</span>
                 <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight leading-tight">
                   {artist.name}
@@ -107,20 +107,20 @@ export default function ArtistDetail() {
                 </div>
               </div>
 
-              <div className="flex flex-col justify-center bg-[#141414] p-6 rounded-xl border border-[#27272a] shadow-xl w-full xl:w-72 flex-shrink-0">
+              <div className="flex flex-col justify-center bg-surface1 p-6 rounded-2xl border border-white/5 shadow-xl w-full xl:w-72 flex-shrink-0 text-left">
                 <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#8b5cf6]"></span>
+                  <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(124,58,237,0.8)]"></span>
                   Artist Info
                 </h3>
                 <div className="space-y-4 text-sm">
                   {artist.followers && artist.followers.total != null && (
-                    <div className="flex justify-between items-center border-b border-[#27272a] pb-2 mb-4">
+                    <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-4">
                       <span className="text-[#9ca3af]">Followers</span>
                       <span className="text-white font-medium">{artist.followers.total.toLocaleString()}</span>
                     </div>
                   )}
                   {artist.genres?.length > 0 && (
-                    <div className="flex flex-col border-b border-[#27272a] pb-2">
+                    <div className="flex flex-col border-b border-white/5 pb-2">
                       <span className="text-[#9ca3af] mb-1">Genres</span>
                       <span className="text-white font-medium capitalize truncate">{artist.genres.join(', ')}</span>
                     </div>
@@ -128,7 +128,7 @@ export default function ArtistDetail() {
                 </div>
                 
                 {artist.uri && (
-                  <div className="mt-auto border-t border-[#27272a] pt-4 mt-6">
+                  <div className="mt-auto border-t border-white/5 pt-4 mt-6">
                     <p className="text-[#9ca3af] text-xs uppercase tracking-wider mb-3 text-center font-semibold">Scan on Spotify</p>
                     <img 
                       src={`https://scannables.scdn.co/uri/plain/png/141414/white/320/${artist.uri}`} 

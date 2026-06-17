@@ -103,11 +103,11 @@ export default function Profile() {
   );
 
   return (
-    <div className="bg-background min-h-screen pt-32 pb-12">
+    <div className="bg-background min-h-screen pt-24 sm:pt-32 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Profile Header */}
-        <div className="bg-surface1 border border-white/5 rounded-2xl p-8 mb-12 flex flex-col md:flex-row items-center md:items-start gap-8 shadow-2xl relative overflow-hidden group">
+        <div className="bg-surface1 border border-white/5 rounded-2xl p-6 sm:p-8 mb-12 flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 shadow-2xl relative overflow-hidden group text-center md:text-left">
           {/* Subtle gradient orb behind avatar */}
           <div className="absolute top-0 left-0 w-64 h-64 bg-primary/10 blur-[100px] pointer-events-none rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
           
@@ -127,7 +127,7 @@ export default function Profile() {
           
           <div className="flex-1 relative z-10 w-full">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-              <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
                 <h1 className="text-3xl md:text-5xl font-display font-bold text-white tracking-tight">
                   {profile.full_name || profile.username}
                 </h1>
@@ -149,10 +149,10 @@ export default function Profile() {
                 </Link>
               )}
             </div>
-            <p className="gradient-text font-bold text-lg mb-4">@{profile.username}</p>
+            <p className="gradient-text font-bold text-lg mb-4 text-center md:text-left">@{profile.username}</p>
             
             {profile.bio && (
-              <p className="text-secondary text-lg mb-8 max-w-2xl leading-relaxed">{profile.bio}</p>
+              <p className="text-secondary text-lg mb-8 max-w-2xl leading-relaxed mx-auto md:mx-0">{profile.bio}</p>
             )}
 
             {/* Top Artists and Genres */}
@@ -190,7 +190,7 @@ export default function Profile() {
             )}
 
             {/* Listening Activity */}
-            <div className="flex items-center justify-center md:justify-start gap-8 mt-6">
+            <div className="flex items-center justify-center md:justify-start gap-6 sm:gap-8 mt-8 border-t border-white/5 pt-6 md:border-t-0 md:pt-0">
               <div className="text-center">
                 <div className="text-2xl font-bold text-white">{reviews.length}</div>
                 <div className="text-sm text-[#6b7280] uppercase tracking-wider">Reviews</div>

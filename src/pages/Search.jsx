@@ -151,7 +151,7 @@ export default function Search() {
       return (
         <div className="text-center py-8 animate-fade-in-up">
           <Music className="w-20 h-20 text-primary mx-auto mb-8 opacity-80" />
-          <h2 className="text-4xl font-display font-bold text-white mb-10 tracking-tight">Start typing to discover <GradientText>music</GradientText></h2>
+          <h2 className="text-3xl sm:text-4xl font-display font-bold text-white mb-10 tracking-tight">Start typing to discover <GradientText>music</GradientText></h2>
           <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
             {suggestions.map(s => (
               <button 
@@ -223,7 +223,7 @@ export default function Search() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-24 pt-24">
+    <div className="min-h-screen bg-background pb-24 pt-24 sm:pt-32">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
         <SearchBar onSearch={handleSearch} initialValue={query} />
         

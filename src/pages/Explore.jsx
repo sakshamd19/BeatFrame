@@ -88,12 +88,12 @@ export default function Explore() {
   }
 
   return (
-    <div className="pb-24 pt-24 min-h-screen">
+    <div className="pb-24 pt-24 sm:pt-32 min-h-screen">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
-          <h1 className="font-display font-bold text-5xl md:text-7xl mb-6 tracking-tight">
+          <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-7xl mb-6 tracking-tight">
             What <GradientText>BeatFrame</GradientText> is Hearing
           </h1>
           <p className="text-lg text-[#94a3b8] font-medium max-w-2xl mx-auto">
@@ -108,7 +108,7 @@ export default function Explore() {
               <Disc3 className="w-6 h-6 text-secondary animate-[spin_4s_linear_infinite]" />
               <h2 className="font-display font-bold text-2xl text-white">Global Fresh Drops</h2>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
               {newReleasesGlobal.map(album => (
                 <Link key={album.id} to={`/album/${album.id}`} className="group relative block rounded-xl overflow-hidden aspect-square">
                   <img src={album.images[0]?.url} alt={album.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -130,7 +130,7 @@ export default function Explore() {
               <Disc3 className="w-6 h-6 text-secondary animate-[spin_4s_linear_infinite]" />
               <h2 className="font-display font-bold text-2xl text-white">Fresh Drops in India</h2>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
               {newReleasesIndia.map(album => (
                 <Link key={album.id} to={`/album/${album.id}`} className="group relative block rounded-xl overflow-hidden aspect-square">
                   <img src={album.images[0]?.url} alt={album.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
