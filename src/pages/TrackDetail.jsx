@@ -4,7 +4,7 @@ import { getTrack } from '../services/spotify';
 import { supabase } from '../lib/supabase';
 import ReviewCard from '../components/ReviewCard';
 import SkeletonCard from '../components/SkeletonCard';
-import { Play } from 'lucide-react';
+import { Play, Music, Headphones } from 'lucide-react';
 
 export default function TrackDetail() {
   const { spotifyId } = useParams();
@@ -138,6 +138,27 @@ export default function TrackDetail() {
                     </svg>
                     Listen on YouTube
                   </a>
+
+                  <a 
+                    href={`https://music.apple.com/search?term=${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-8 py-3 bg-[#fa243c] hover:bg-[#e02036] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#fa243c]/20 gap-2"
+                  >
+                    <Music className="w-5 h-5" />
+                    Apple Music
+                  </a>
+
+                  <a 
+                    href={`https://music.amazon.com/search/${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-8 py-3 bg-[#00a8e1] hover:bg-[#0096c9] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#00a8e1]/20 gap-2"
+                  >
+                    <Headphones className="w-5 h-5" />
+                    Amazon Music
+                  </a>
+
                   {track.preview_url && (
                     <audio controls src={track.preview_url} className="h-12 rounded-md" />
                   )}
