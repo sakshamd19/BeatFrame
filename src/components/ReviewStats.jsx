@@ -81,7 +81,7 @@ export default function ReviewStats({ reviews }) {
         r={radius}
         fill="transparent"
         stroke={color}
-        strokeWidth="24"
+        strokeWidth="16"
         strokeLinecap="butt"
         strokeDasharray={`${length} ${circumference - length}`}
         strokeDashoffset={-offset}
@@ -108,7 +108,7 @@ export default function ReviewStats({ reviews }) {
             r={radius}
             fill="transparent"
             stroke="#1f2937"
-            strokeWidth="24"
+            strokeWidth="16"
             strokeDasharray={`${semiCircumference} ${circumference}`}
             strokeDashoffset="0"
           />
@@ -120,25 +120,25 @@ export default function ReviewStats({ reviews }) {
         </svg>
 
         {/* Center Text */}
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-2">
+        <div className="absolute bottom-2 left-0 right-0 flex flex-col items-center pb-2">
           <div 
-            className="text-5xl font-bold mb-1"
+            className="text-4xl font-semibold mb-0.5 tracking-tight"
             style={{ color: colors[highestCat] }}
           >
             {percentages[highestCat]}%
           </div>
-          <div className="text-[#9ca3af] text-sm">
+          <div className="text-[#9ca3af] text-xs font-medium">
             {highestCount}/{total} Votes
           </div>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap justify-center gap-6 text-sm font-medium border-b border-white/5 pb-8 w-full max-w-2xl">
+      <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs font-medium border-b border-white/5 pb-8 w-full max-w-2xl">
         {['skip', 'decent', 'fire', 'banger'].map((key) => (
           <div key={key} className="flex items-center gap-2">
             <span 
-              className="w-3 h-3 rounded-full" 
+              className="w-2 h-2 rounded-full" 
               style={{ backgroundColor: colors[key] }}
             />
             <span className="text-[#9ca3af]">{labels[key]}</span>
