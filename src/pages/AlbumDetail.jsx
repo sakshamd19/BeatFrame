@@ -18,8 +18,6 @@ export default function AlbumDetail() {
   const [error, setError] = useState(null);
 
   const [sortBy, setSortBy] = useState('recent');
-  const [showSpoilers, setShowSpoilers] = useState(false);
-  const [followingOnly, setFollowingOnly] = useState(false);
 
   useEffect(() => {
     const fetchAlbumData = async () => {
@@ -144,26 +142,6 @@ export default function AlbumDetail() {
                   <option value="recent">↓ Recent</option>
                   <option value="liked">⇅ Most Liked</option>
                 </select>
-                
-                <label className="flex items-center gap-2 text-sm text-[#9ca3af] cursor-pointer hover:text-white transition-colors">
-                  <input 
-                    type="checkbox" 
-                    checked={showSpoilers}
-                    onChange={(e) => setShowSpoilers(e.target.checked)}
-                    className="rounded border-white/10 bg-[#141414] text-[#8b5cf6] focus:ring-[#8b5cf6]"
-                  />
-                  Show Spoilers
-                </label>
-
-                <label className="flex items-center gap-2 text-sm text-[#9ca3af] cursor-pointer hover:text-white transition-colors">
-                  <input 
-                    type="checkbox" 
-                    checked={followingOnly}
-                    onChange={(e) => setFollowingOnly(e.target.checked)}
-                    className="rounded border-white/10 bg-[#141414] text-[#8b5cf6] focus:ring-[#8b5cf6]"
-                  />
-                  Following Only
-                </label>
               </div>
             </div>
             
