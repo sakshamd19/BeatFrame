@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Music, Headphones, Edit3 } from 'lucide-react';
+import { Music, Headphones } from 'lucide-react';
 
 export default function AlbumHeader({ album }) {
   if (!album) return null;
@@ -39,13 +39,6 @@ export default function AlbumHeader({ album }) {
             {releaseYear} • {album.total_tracks} tracks
           </p>
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 w-full">
-            <Link 
-              to={`/write-review/album/${album.id}`}
-              className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#8b5cf6]/20 gap-2"
-            >
-              <Edit3 className="w-5 h-5" />
-              Write a Review
-            </Link>
             {album.external_urls?.spotify && (
               <a 
                 href={album.external_urls.spotify}

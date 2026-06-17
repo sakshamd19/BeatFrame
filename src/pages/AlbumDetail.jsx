@@ -6,6 +6,7 @@ import AlbumHeader from '../components/AlbumHeader';
 import Tracklist from '../components/Tracklist';
 import ReviewCard from '../components/ReviewCard';
 import SkeletonCard from '../components/SkeletonCard';
+import { Edit3 } from 'lucide-react';
 
 export default function AlbumDetail() {
   const { spotifyId } = useParams();
@@ -107,11 +108,20 @@ export default function AlbumDetail() {
 
           {/* Right Column: Community Reviews */}
           <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Community Reviews</h2>
-              {!loadingReviews && (
-                <span className="text-[#9ca3af] text-sm">{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</span>
-              )}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-1">Community Reviews</h2>
+                {!loadingReviews && (
+                  <span className="text-[#9ca3af] text-sm">{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</span>
+                )}
+              </div>
+              <Link 
+                to={`/write-review/album/${spotifyId}`}
+                className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-auto sm:px-8 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#8b5cf6]/20 gap-2"
+              >
+                <Edit3 className="w-5 h-5" />
+                Write a Review
+              </Link>
             </div>
             
             {loadingReviews ? (

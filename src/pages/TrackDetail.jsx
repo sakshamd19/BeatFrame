@@ -108,13 +108,6 @@ export default function TrackDetail() {
                 </Link>
                 
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 w-full">
-                  <Link 
-                    to={`/write-review/track/${track.id}`}
-                    className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#8b5cf6]/20 gap-2"
-                  >
-                    <Edit3 className="w-5 h-5" />
-                    Write a Review
-                  </Link>
                   {track.external_urls?.spotify && (
                     <a 
                       href={track.external_urls.spotify}
@@ -193,11 +186,20 @@ export default function TrackDetail() {
 
         {/* Reviews */}
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">Community Reviews</h2>
-            {!loadingReviews && (
-              <span className="text-[#9ca3af] text-sm">{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</span>
-            )}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-1">Community Reviews</h2>
+              {!loadingReviews && (
+                <span className="text-[#9ca3af] text-sm">{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</span>
+              )}
+            </div>
+            <Link 
+              to={`/write-review/track/${spotifyId}`}
+              className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-auto sm:px-8 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#8b5cf6]/20 gap-2"
+            >
+              <Edit3 className="w-5 h-5" />
+              Write a Review
+            </Link>
           </div>
           
           {loadingReviews ? (
