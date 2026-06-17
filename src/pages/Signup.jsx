@@ -344,14 +344,14 @@ export default function Signup() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="relative group">
                   <input id="fullName" name="fullName" type="text" value={formData.fullName} onChange={handleChange} onBlur={handleBlur} required
-                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer" placeholder="Full Name" />
+                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer" placeholder="Full Name" />
                   <label htmlFor="fullName" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Full Name</label>
                   <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
                   {errors.fullName && <p className="mt-1 text-xs text-red-500">{errors.fullName}</p>}
                 </div>
                 <div className="relative group">
                   <input id="username" name="username" type="text" value={formData.username} onChange={handleChange} onBlur={handleBlur} required
-                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 pr-8 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer" placeholder="Username" />
+                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 pr-8 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer" placeholder="Username" />
                   <label htmlFor="username" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Username</label>
                   <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
                   
@@ -372,7 +372,7 @@ export default function Signup() {
 
               <div className="relative group pt-2">
                 <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} onBlur={handleBlur} required
-                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer" placeholder="Email" />
+                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer" placeholder="Email" />
                 <label htmlFor="email" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Email address</label>
                 <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
                 {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
@@ -380,7 +380,7 @@ export default function Signup() {
 
               <div className="relative group pt-2">
                 <input id="password" name="password" type="password" value={formData.password} onChange={handleChange} onBlur={handleBlur} required
-                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer" placeholder="Password" />
+                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer" placeholder="Password" />
                 <label htmlFor="password" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Password</label>
                 <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
                 {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
@@ -388,7 +388,7 @@ export default function Signup() {
 
               <div className="relative group pt-2">
                 <input id="confirmPassword" name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} onBlur={handleBlur} required
-                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer" placeholder="Confirm Password" />
+                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer" placeholder="Confirm Password" />
                 <label htmlFor="confirmPassword" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Confirm Password</label>
                 <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
                 {errors.confirmPassword && <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>}
@@ -401,7 +401,7 @@ export default function Signup() {
                 </div>
                 <div className="relative w-1/2">
                   <input id="captcha" name="captcha" type="number" value={captchaInput} onChange={(e) => { setCaptchaInput(e.target.value); setErrors(prev => ({...prev, captcha: ''})); }} required
-                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-[#94a3b8] focus:ring-0 focus:border-secondary" placeholder="Answer" />
+                    className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-[#94a3b8] focus:outline-none focus:ring-0 focus:border-secondary" placeholder="Answer" />
                   {errors.captcha && <p className="mt-1 text-xs text-red-500 absolute w-full">{errors.captcha}</p>}
                 </div>
               </div>

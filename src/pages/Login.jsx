@@ -119,7 +119,7 @@ export default function Login() {
                   required 
                   value={identifier} 
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer"
+                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer"
                   placeholder="Username or Email"
                 />
                 <label htmlFor="identifier" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">
@@ -141,7 +141,7 @@ export default function Login() {
                   required 
                   value={password} 
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:ring-0 focus:border-transparent peer"
+                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer"
                   placeholder="Password"
                 />
                 <label htmlFor="password" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">
