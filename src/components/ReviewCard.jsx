@@ -160,22 +160,22 @@ export default function ReviewCard({ review }) {
           </p>
 
           {/* Bottom Action Bar */}
-          <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/5">
-            <Link to={`/profile/${profiles?.username}`} className="flex items-center gap-2 group/user z-10" onClick={(e) => e.stopPropagation()}>
+          <div className="flex flex-wrap items-center justify-between mt-auto pt-3 border-t border-white/5 gap-y-3 gap-x-2">
+            <Link to={`/profile/${profiles?.username}`} className="flex items-center gap-2 group/user z-10 min-w-0 flex-1" onClick={(e) => e.stopPropagation()}>
               {profiles?.avatar_url ? (
-                <img src={profiles.avatar_url} alt={profiles.username} className="w-6 h-6 rounded-full object-cover border border-white/10 group-hover/user:border-primary transition-colors" />
+                <img src={profiles.avatar_url} alt={profiles.username} className="w-6 h-6 rounded-full object-cover border border-white/10 group-hover/user:border-primary transition-colors flex-shrink-0" />
               ) : (
-                <div className="w-6 h-6 rounded-full bg-surface2 flex items-center justify-center border border-white/10">
+                <div className="w-6 h-6 rounded-full bg-surface2 flex items-center justify-center border border-white/10 flex-shrink-0">
                   <UserIcon className="w-3 h-3 text-[#94a3b8]" />
                 </div>
               )}
-              <span className="text-xs font-medium text-white group-hover/user:text-primary transition-colors">
+              <span className="text-xs font-medium text-white group-hover/user:text-primary transition-colors truncate">
                 {profiles?.username || 'Anonymous'}
               </span>
-              <span className="text-xs text-[#475569]">• {timeAgo}</span>
+              <span className="text-xs text-[#475569] whitespace-nowrap flex-shrink-0">• {timeAgo}</span>
             </Link>
 
-            <div className="flex items-center gap-3 z-10">
+            <div className="flex items-center gap-3 z-10 flex-shrink-0">
               {isAuthor && (
                 <div className="flex items-center gap-2 mr-2">
                   <button onClick={handleEdit} className="p-1.5 text-[#94a3b8] hover:text-primary transition-colors rounded-full hover:bg-white/5" title="Edit Review">
