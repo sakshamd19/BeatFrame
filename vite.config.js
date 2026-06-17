@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // Custom plugin to handle our Vercel serverless function locally
 function localServerlessMock() {
@@ -50,7 +51,7 @@ function localServerlessMock() {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), localServerlessMock()],
+  plugins: [react(), tailwindcss(), localServerlessMock(), basicSsl()],
   server: {
     host: '127.0.0.1'
   }

@@ -1,6 +1,7 @@
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-const REDIRECT_URI = 'http://127.0.0.1:5173/spotify-callback';
+// Use the current domain (e.g. localhost:5173 or your production Vercel URL)
+const REDIRECT_URI = window.location.origin + '/spotify-callback';
 
 export const getSpotifyAuthUrl = () => {
   const scopes = [
