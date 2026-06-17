@@ -149,7 +149,17 @@ export default function Profile() {
                 </Link>
               )}
             </div>
-            <p className="gradient-text font-bold text-lg mb-4 text-center md:text-left">@{profile.username}</p>
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-3 mb-4">
+              <p className="gradient-text font-bold text-lg text-center md:text-left m-0">@{profile.username}</p>
+              {currentUser?.id === profile.id && currentUser?.email && (
+                <div className="px-3 py-1 bg-surface2 border border-white/10 rounded-full text-xs text-[#9ca3af] font-medium flex items-center gap-2" title="Your email (private)">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {currentUser.email}
+                </div>
+              )}
+            </div>
             
             {profile.bio && (
               <p className="text-secondary text-lg mb-8 max-w-2xl leading-relaxed mx-auto md:mx-0">{profile.bio}</p>
