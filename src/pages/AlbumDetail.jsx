@@ -6,7 +6,8 @@ import AlbumHeader from '../components/AlbumHeader';
 import Tracklist from '../components/Tracklist';
 import ReviewCard from '../components/ReviewCard';
 import SkeletonCard from '../components/SkeletonCard';
-import { Edit3 } from 'lucide-react';
+import ReviewStats from '../components/ReviewStats';
+import InlineReviewForm from '../components/InlineReviewForm';
 
 export default function AlbumDetail() {
   const { spotifyId } = useParams();
@@ -15,6 +16,10 @@ export default function AlbumDetail() {
   const [loadingAlbum, setLoadingAlbum] = useState(true);
   const [loadingReviews, setLoadingReviews] = useState(true);
   const [error, setError] = useState(null);
+
+  const [sortBy, setSortBy] = useState('recent');
+  const [showSpoilers, setShowSpoilers] = useState(false);
+  const [followingOnly, setFollowingOnly] = useState(false);
 
   useEffect(() => {
     const fetchAlbumData = async () => {
@@ -30,39 +35,46 @@ export default function AlbumDetail() {
       }
     };
 
-    const fetchReviews = async () => {
-      setLoadingReviews(true);
-      try {
-        const { data, error: dbError } = await supabase
-          .from('reviews')
-          .select(`
-            *,
-            profiles ( username, avatar_url ),
-            likes ( count )
-          `)
-          .eq('spotify_album_id', spotifyId)
-          .order('created_at', { ascending: false });
-
-        if (dbError) throw dbError;
-        
-        const formattedData = data.map(review => ({
-          ...review,
-          likes_count: review.likes?.[0]?.count || 0
-        }));
-        
-        setReviews(formattedData);
-      } catch (err) {
-        console.error("Error fetching reviews:", err);
-      } finally {
-        setLoadingReviews(false);
-      }
-    };
-
     if (spotifyId) {
       fetchAlbumData();
       fetchReviews();
     }
   }, [spotifyId]);
+
+  const fetchReviews = async () => {
+    setLoadingReviews(true);
+    try {
+      const { data, error: dbError } = await supabase
+        .from('reviews')
+        .select(`
+          *,
+          profiles ( username, avatar_url ),
+          likes ( count )
+        `)
+        .eq('spotify_album_id', spotifyId)
+        .order('created_at', { ascending: false });
+
+      if (dbError) throw dbError;
+      
+      const formattedData = data.map(review => ({
+        ...review,
+        likes_count: review.likes?.[0]?.count || 0
+      }));
+      
+      setReviews(formattedData);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+    } finally {
+      setLoadingReviews(false);
+    }
+  };
+
+  const sortedReviews = [...reviews].sort((a, b) => {
+    if (sortBy === 'liked') {
+      return b.likes_count - a.likes_count;
+    }
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
 
   if (error) {
     return (
@@ -108,40 +120,68 @@ export default function AlbumDetail() {
 
           {/* Right Column: Community Reviews */}
           <div className="lg:col-span-2">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            {reviews.length > 0 && <ReviewStats reviews={reviews} />}
+            
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/5 pb-6">
               <div>
-                <h2 className="text-2xl font-bold text-white mb-1">Community Reviews</h2>
-                {!loadingReviews && (
-                  <span className="text-[#9ca3af] text-sm">{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</span>
-                )}
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  Reviews
+                  {!loadingReviews && (
+                    <span className="text-sm font-normal text-[#9ca3af] bg-surface2 px-2 py-0.5 rounded-full">
+                      {reviews.length}
+                    </span>
+                  )}
+                </h2>
               </div>
-              <Link 
-                to={`/write-review/album/${spotifyId}`}
-                className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-auto sm:px-8 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#8b5cf6]/20 gap-2"
-              >
-                <Edit3 className="w-5 h-5" />
-                Write a Review
-              </Link>
+
+              {/* Filters Toolbar */}
+              <div className="flex flex-wrap items-center gap-3">
+                <select 
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-[#141414] border border-white/10 text-white rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-[#8b5cf6]"
+                >
+                  <option value="recent">↓ Recent</option>
+                  <option value="liked">⇅ Most Liked</option>
+                </select>
+                
+                <label className="flex items-center gap-2 text-sm text-[#9ca3af] cursor-pointer hover:text-white transition-colors">
+                  <input 
+                    type="checkbox" 
+                    checked={showSpoilers}
+                    onChange={(e) => setShowSpoilers(e.target.checked)}
+                    className="rounded border-white/10 bg-[#141414] text-[#8b5cf6] focus:ring-[#8b5cf6]"
+                  />
+                  Show Spoilers
+                </label>
+
+                <label className="flex items-center gap-2 text-sm text-[#9ca3af] cursor-pointer hover:text-white transition-colors">
+                  <input 
+                    type="checkbox" 
+                    checked={followingOnly}
+                    onChange={(e) => setFollowingOnly(e.target.checked)}
+                    className="rounded border-white/10 bg-[#141414] text-[#8b5cf6] focus:ring-[#8b5cf6]"
+                  />
+                  Following Only
+                </label>
+              </div>
             </div>
             
+            {album && <InlineReviewForm item={album} type="album" onSuccess={fetchReviews} />}
+            
             {loadingReviews ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
                 <SkeletonCard />
                 <SkeletonCard />
               </div>
-            ) : reviews.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {reviews.map(review => <ReviewCard key={review.id} review={review} />)}
+            ) : sortedReviews.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+                {sortedReviews.map(review => <ReviewCard key={review.id} review={review} />)}
               </div>
             ) : (
-              <div className="bg-[#141414] border border-[#27272a] rounded-xl p-8 text-center">
-                <p className="text-[#9ca3af] mb-4">No reviews yet for this album.</p>
-                <Link 
-                  to={`/write-review/album/${spotifyId}`}
-                  className="text-[#8b5cf6] hover:text-white font-medium transition-colors"
-                >
-                  Be the first to review it!
-                </Link>
+              <div className="bg-[#141414] border border-[#27272a] rounded-xl p-8 text-center mt-8">
+                <p className="text-[#9ca3af] text-lg">No reviews yet for this album.</p>
+                <p className="text-[#6b7280] text-sm mt-2">Write a review above to be the first!</p>
               </div>
             )}
           </div>

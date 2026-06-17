@@ -8,7 +8,6 @@ import Search from './pages/Search';
 import AlbumDetail from './pages/AlbumDetail';
 import TrackDetail from './pages/TrackDetail';
 import ArtistDetail from './pages/ArtistDetail';
-import WriteReview from './pages/WriteReview';
 import EditReview from './pages/EditReview';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
@@ -43,7 +42,6 @@ function App() {
             <Route path="/album/:spotifyId" element={<AlbumDetail />} />
             <Route path="/track/:spotifyId" element={<TrackDetail />} />
             <Route path="/artist/:spotifyId" element={<ArtistDetail />} />
-            <Route path="/write-review/:type/:spotifyId" element={<ProtectedRoute><WriteReview /></ProtectedRoute>} />
             <Route path="/edit-review/:reviewId" element={<ProtectedRoute><EditReview /></ProtectedRoute>} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path="/settings" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />

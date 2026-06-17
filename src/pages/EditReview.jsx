@@ -37,8 +37,13 @@ export default function EditReview() {
             throw new Error("You do not have permission to edit this review.");
         }
 
+        let initialRating = reviewData.rating || '';
+        if (initialRating === 'banger') initialRating = 'perfection';
+        else if (initialRating === 'fire') initialRating = 'go_for_it';
+        else if (initialRating === 'decent') initialRating = 'timepass';
+
         setReview(reviewData);
-        setRating(reviewData.rating || '');
+        setRating(initialRating);
         setReviewText(reviewData.review_text || '');
         
       } catch (err) {
@@ -57,6 +62,11 @@ export default function EditReview() {
     e.preventDefault();
     if (!rating) {
       setError("Please select a rating.");
+      return;
+    }
+
+    if (reviewText && reviewText.length > 1000) {
+      setError("Review cannot exceed 1000 characters.");
       return;
     }
 
@@ -84,10 +94,10 @@ export default function EditReview() {
   };
 
   const ratings = [
-    { value: 'banger', label: 'Banger', color: 'bg-[#8b5cf6]', border: 'border-[#8b5cf6]' },
-    { value: 'fire', label: 'Fire', color: 'bg-[#f97316]', border: 'border-[#f97316]' },
-    { value: 'decent', label: 'Decent', color: 'bg-[#3b82f6]', border: 'border-[#3b82f6]' },
-    { value: 'skip', label: 'Skip', color: 'bg-[#6b7280]', border: 'border-[#6b7280]' }
+    { value: 'skip', label: 'Skip', activeClass: 'bg-[#ef4444] text-white', borderClass: 'border-[#ef4444]' },
+    { value: 'timepass', label: 'Timepass', activeClass: 'bg-[#eab308] text-black', borderClass: 'border-[#eab308]' },
+    { value: 'go_for_it', label: 'Go for it', activeClass: 'bg-[#10b981] text-white', borderClass: 'border-[#10b981]' },
+    { value: 'perfection', label: 'Perfection', activeClass: 'bg-[#a855f7] text-white', borderClass: 'border-[#a855f7]' }
   ];
 
   if (loading) return (
@@ -149,8 +159,8 @@ export default function EditReview() {
                   className={`
                     py-3 rounded-lg font-bold transition-all border-2
                     ${rating === r.value 
-                      ? `${r.color} border-transparent text-white scale-105 shadow-[0_0_15px_rgba(124,58,237,0.4)]` 
-                      : `bg-surface1 ${r.border} text-[#9ca3af] hover:text-white hover:scale-105 hover:shadow-[0_0_15px_rgba(124,58,237,0.2)]`}
+                      ? `${r.activeClass} border-transparent scale-105 shadow-lg` 
+                      : `bg-[#141414] ${r.borderClass} text-[#9ca3af] hover:text-white hover:scale-105`}
                   `}
                 >
                   {r.label}
@@ -161,17 +171,21 @@ export default function EditReview() {
 
           {/* Review Text */}
           <div>
-            <label htmlFor="review" className="block text-sm font-medium text-[#9ca3af] mb-2">
-              Your Review (Optional)
-            </label>
-            <textarea
-              id="review"
-              rows={6}
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              placeholder="What did you think?"
-              className="block w-full p-4 bg-surface1 border-2 border-white/5 rounded-xl text-white placeholder-[#6b7280] focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary resize-none transition-colors"
-            />
+              <label htmlFor="review" className="block text-sm font-medium text-[#9ca3af] mb-2">
+                Your Review (Optional)
+              </label>
+              <textarea
+                id="review"
+                rows={6}
+                maxLength={1000}
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Write your review here..."
+                className="block w-full p-4 bg-[#141414] border-2 border-[#27272a] rounded-xl text-white placeholder-[#6b7280] focus:outline-none focus:border-[#8b5cf6] focus:ring-1 focus:ring-[#8b5cf6] resize-none"
+              />
+              <div className="text-right mt-1 text-xs text-[#6b7280]">
+                {reviewText.length}/1000
+              </div>
           </div>
 
           {/* Submit */}
