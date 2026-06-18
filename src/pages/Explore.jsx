@@ -48,8 +48,8 @@ export default function Explore() {
 
         // 3. Fetch Trending (Global and India)
         const [globalData, indiaData] = await Promise.all([
-          getTrendingTracks('US').catch(() => null),
-          getTrendingTracks('IN').catch(() => null)
+          getTrendingTracks('global').catch(() => null),
+          getTrendingTracks('India').catch(() => null)
         ]);
 
         if (globalData?.items) {

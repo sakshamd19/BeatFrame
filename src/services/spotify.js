@@ -112,11 +112,13 @@ export const getNewReleases = async (market = 'IN') => {
   }
 };
 
-export const getTrendingTracks = async (market = 'IN') => {
+export const getTrendingTracks = async (region = 'global') => {
   try {
-    const query = "year:2024-2025";
-    const data = await fetchSpotifyAPI(`/search?q=${encodeURIComponent(query)}&type=track&limit=5&market=${market}`);
-    return { items: data.tracks?.items?.map(track => ({ track })) || [] };
+    // Top 50 Global: 37i9dQZEVXbMDoHDwVN2tF
+    // Top 50 India: 37i9dQZEVXbMZ5PAcKIGGZ
+    const playlistId = region === 'India' ? '37i9dQZEVXbMZ5PAcKIGGZ' : '37i9dQZEVXbMDoHDwVN2tF';
+    const data = await fetchSpotifyAPI(`/playlists/${playlistId}/tracks?limit=5`);
+    return { items: data.items || [] };
   } catch (error) {
     console.error(`Error fetching trending tracks:`, error);
     throw error;
