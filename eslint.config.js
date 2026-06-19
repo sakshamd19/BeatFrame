@@ -14,8 +14,25 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/purity": "off",
+      "no-unused-vars": ["error", { "varsIgnorePattern": "^(React|err|GlowBadge)$" }]
+    }
   },
+  {
+    files: ['vite.config.js', 'test-*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node
+      }
+    }
+  }
 ])

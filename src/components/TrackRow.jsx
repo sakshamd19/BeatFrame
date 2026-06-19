@@ -15,7 +15,7 @@ export default function TrackRow({ track, index }) {
     return `${minutes}:${seconds.padStart(2, '0')}`;
   };
 
-  const Content = () => (
+  const content = (
     <div className="flex items-center gap-4 p-3 bg-[#141414] border-b border-[#27272a] hover:bg-[#1a1a1a] transition-colors group">
       <div className="text-[#6b7280] w-6 text-right text-sm">{index + 1}</div>
       <img src={imageUrl} alt={albumName} className="w-10 h-10 rounded shadow-sm" loading="lazy" />
@@ -37,9 +37,7 @@ export default function TrackRow({ track, index }) {
 
   return track.id ? (
     <Link to={`/track/${track.id}`} className="block">
-      <Content />
+      {content}
     </Link>
-  ) : (
-    <Content />
-  );
+  ) : content;
 }

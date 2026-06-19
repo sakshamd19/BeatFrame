@@ -19,27 +19,7 @@ export default function AlbumDetail() {
 
   const [sortBy, setSortBy] = useState('recent');
 
-  useEffect(() => {
-    const fetchAlbumData = async () => {
-      setLoadingAlbum(true);
-      setError(null);
-      try {
-        const albumData = await getAlbum(spotifyId);
-        setAlbum(albumData);
-      } catch (err) {
-        setError("Couldn't load album details. Please try again.");
-      } finally {
-        setLoadingAlbum(false);
-      }
-    };
-
-    if (spotifyId) {
-      fetchAlbumData();
-      fetchReviews();
-    }
-  }, [spotifyId]);
-
-  const fetchReviews = async () => {
+  const fetchReviews = React.useCallback(async () => {
     setLoadingReviews(true);
     try {
       const { data, error: dbError } = await supabase
@@ -65,7 +45,27 @@ export default function AlbumDetail() {
     } finally {
       setLoadingReviews(false);
     }
-  };
+  }, [spotifyId]);
+
+  useEffect(() => {
+    const fetchAlbumData = async () => {
+      setLoadingAlbum(true);
+      setError(null);
+      try {
+        const albumData = await getAlbum(spotifyId);
+        setAlbum(albumData);
+      } catch (err) {
+        setError("Couldn't load album details. Please try again.");
+      } finally {
+        setLoadingAlbum(false);
+      }
+    };
+
+    if (spotifyId) {
+      fetchAlbumData();
+      fetchReviews();
+    }
+  }, [spotifyId, fetchReviews]);
 
   const sortedReviews = [...reviews].sort((a, b) => {
     if (sortBy === 'liked') {

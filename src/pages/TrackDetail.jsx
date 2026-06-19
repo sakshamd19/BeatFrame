@@ -4,7 +4,7 @@ import { getTrack } from '../services/spotify';
 import { supabase } from '../lib/supabase';
 import ReviewCard from '../components/ReviewCard';
 import SkeletonCard from '../components/SkeletonCard';
-import { Play, Music, Headphones, Edit3 } from 'lucide-react';
+import { Music, Headphones } from 'lucide-react';
 import ReviewStats from '../components/ReviewStats';
 import InlineReviewForm from '../components/InlineReviewForm';
 
@@ -18,28 +18,7 @@ export default function TrackDetail() {
   
   const [sortBy, setSortBy] = useState('recent');
 
-  useEffect(() => {
-    const fetchTrackData = async () => {
-      setLoadingTrack(true);
-      setError(null);
-      try {
-        const trackData = await getTrack(spotifyId);
-        setTrack(trackData);
-      } catch (err) {
-        setError("Couldn't load track details.");
-      } finally {
-        setLoadingTrack(false);
-      }
-    };
-
-    // Define fetchReviews outside so it can be used for refresh
-    if (spotifyId) {
-      fetchTrackData();
-      fetchReviews();
-    }
-  }, [spotifyId]);
-
-  const fetchReviews = async () => {
+  const fetchReviews = React.useCallback(async () => {
     setLoadingReviews(true);
     try {
       const { data, error: dbError } = await supabase
@@ -55,7 +34,27 @@ export default function TrackDetail() {
     } finally {
       setLoadingReviews(false);
     }
-  };
+  }, [spotifyId]);
+
+  useEffect(() => {
+    const fetchTrackData = async () => {
+      setLoadingTrack(true);
+      setError(null);
+      try {
+        const trackData = await getTrack(spotifyId);
+        setTrack(trackData);
+      } catch (err) {
+        setError("Couldn't load track details.");
+      } finally {
+        setLoadingTrack(false);
+      }
+    };
+
+    if (spotifyId) {
+      fetchTrackData();
+      fetchReviews();
+    }
+  }, [spotifyId, fetchReviews]);
 
   const sortedReviews = [...reviews].sort((a, b) => {
     if (sortBy === 'liked') {
