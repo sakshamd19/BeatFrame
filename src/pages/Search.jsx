@@ -152,12 +152,12 @@ export default function Search() {
         <div className="text-center py-8 animate-fade-in-up">
           <Music className="w-20 h-20 text-primary mx-auto mb-8 opacity-80" />
           <h2 className="text-3xl sm:text-4xl font-display font-bold text-white mb-10 tracking-tight">Start typing to discover <GradientText>music</GradientText></h2>
-          <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-3xl mx-auto">
             {suggestions.map(s => (
               <button 
                 key={s} 
                 onClick={() => handleSuggestionClick(s)}
-                className="bg-surface2 hover:bg-gradient-to-r hover:from-primary hover:to-secondary border border-white/5 hover:border-transparent text-[#94a3b8] hover:text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.4)]"
+                className="bg-surface2 hover:bg-gradient-to-r hover:from-primary hover:to-secondary border border-white/5 hover:border-transparent text-[#94a3b8] hover:text-white px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.4)]"
               >
                 {s}
               </button>
@@ -188,8 +188,8 @@ export default function Search() {
       <div className="space-y-16 animate-fade-in-up">
         {(activeTab === 'All' || activeTab === 'Albums') && results.albums?.items?.length > 0 && (
           <section>
-            {activeTab === 'All' && <h2 className="text-3xl font-display font-bold text-white mb-8 border-b border-white/5 pb-4">Albums</h2>}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            {activeTab === 'All' && <h2 className="text-2xl sm:text-3xl font-display font-bold text-white mb-6 sm:mb-8 border-b border-white/5 pb-4">Albums</h2>}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
               {results.albums.items.slice(0, activeTab === 'All' ? 5 : 20).map(album => (
                 <AlbumCard key={album.id} album={album} />
               ))}
@@ -199,8 +199,8 @@ export default function Search() {
 
         {(activeTab === 'All' || activeTab === 'Artists') && results.artists?.items?.length > 0 && (
           <section>
-            {activeTab === 'All' && <h2 className="text-3xl font-display font-bold text-white mb-8 border-b border-white/5 pb-4">Artists</h2>}
-            <div className="flex flex-wrap gap-8">
+            {activeTab === 'All' && <h2 className="text-2xl sm:text-3xl font-display font-bold text-white mb-6 sm:mb-8 border-b border-white/5 pb-4">Artists</h2>}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
               {results.artists.items.slice(0, activeTab === 'All' ? 6 : 20).map(artist => (
                 <ArtistCard key={artist.id} artist={artist} />
               ))}
@@ -210,7 +210,7 @@ export default function Search() {
 
         {(activeTab === 'All' || activeTab === 'Tracks') && results.tracks?.items?.length > 0 && (
           <section>
-            {activeTab === 'All' && <h2 className="text-3xl font-display font-bold text-white mb-8 border-b border-white/5 pb-4">Tracks</h2>}
+            {activeTab === 'All' && <h2 className="text-2xl sm:text-3xl font-display font-bold text-white mb-6 sm:mb-8 border-b border-white/5 pb-4">Tracks</h2>}
             <div className="border border-white/5 rounded-2xl overflow-hidden bg-surface1">
               {results.tracks.items.slice(0, activeTab === 'All' ? 5 : 20).map((track, idx) => (
                 <TrackRow key={track.id} track={track} index={idx} />
@@ -228,7 +228,7 @@ export default function Search() {
         <SearchBar onSearch={handleSearch} initialValue={query} />
         
         {/* Filter Tabs */}
-        <div className="flex justify-center mt-10 gap-3 overflow-x-auto pb-4">
+        <div className="flex justify-start sm:justify-center mt-6 sm:mt-10 gap-2 sm:gap-3 overflow-x-auto pb-4 snap-x [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {TABS.map(tab => (
             <button
               key={tab}
