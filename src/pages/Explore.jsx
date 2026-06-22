@@ -6,7 +6,7 @@ import ReviewCard from '../components/ReviewCard';
 import GradientText from '../components/ui/GradientText';
 import WaveformDivider from '../components/ui/WaveformDivider';
 import GlowBadge from '../components/ui/GlowBadge';
-import { Disc3, Zap } from 'lucide-react';
+import { Disc3, Zap, Flame, ThumbsUp, SkipForward } from 'lucide-react';
 
 export default function Explore() {
   const [newReleasesGlobal, setNewReleasesGlobal] = useState([]);
@@ -157,13 +157,17 @@ export default function Explore() {
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
-                  className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${
+                  className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all ${
                     filter === f 
                       ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-[0_0_15px_rgba(124,58,237,0.3)]' 
                       : 'bg-surface1 border border-white/10 text-[#94a3b8] hover:border-white/30 hover:text-white'
                   }`}
                 >
-                  {f === 'Bangers' ? '🔥 Bangers' : f === 'Fire' ? '⚡ Fire' : f === 'Decent' ? '👌 Decent' : f === 'Skip' ? '⏭️ Skip' : 'All Reviews'}
+                  {f === 'Bangers' && <Flame className="w-4 h-4" />}
+                  {f === 'Fire' && <Zap className="w-4 h-4" />}
+                  {f === 'Decent' && <ThumbsUp className="w-4 h-4" />}
+                  {f === 'Skip' && <SkipForward className="w-4 h-4" />}
+                  <span>{f === 'All' ? 'All Reviews' : f}</span>
                 </button>
               ))}
             </div>
