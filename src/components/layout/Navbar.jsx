@@ -7,7 +7,7 @@ import FrequencyBars from '../ui/FrequencyBars';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -60,7 +60,12 @@ export default function Navbar() {
             </Link>
             
             <div className="flex items-center gap-4 ml-2 pl-6 border-l border-white/10">
-              {user ? (
+              {loading ? (
+                <div className="flex items-center gap-4 animate-pulse">
+                  <div className="w-9 h-9 rounded-full bg-white/5"></div>
+                  <div className="w-16 h-4 rounded bg-white/5"></div>
+                </div>
+              ) : user ? (
                 <div className="flex items-center gap-6">
                   <Link to={`/profile/${profile?.username}`} className="flex items-center gap-3 group">
                     {profile?.avatar_url ? (
@@ -111,7 +116,12 @@ export default function Navbar() {
           
           <div className="h-[1px] w-full bg-white/5 my-2"></div>
           
-          {user ? (
+          {loading ? (
+             <div className="flex flex-col gap-2 animate-pulse px-4 py-3">
+               <div className="h-6 bg-white/5 rounded w-24 mb-2"></div>
+               <div className="h-6 bg-white/5 rounded w-32"></div>
+             </div>
+          ) : user ? (
              <div className="flex flex-col gap-2">
                <Link to={`/profile/${profile?.username}`} className="px-4 py-3 rounded-xl text-lg font-display font-medium text-white hover:bg-white/5 transition-colors flex items-center gap-3" onClick={() => setIsOpen(false)}>
                  <UserIcon className="w-5 h-5 text-[#7c3aed]" />
