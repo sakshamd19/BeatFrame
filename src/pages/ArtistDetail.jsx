@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getArtist, getArtistTopTracks, getArtistAlbums } from '../services/spotify';
 import TrackRow from '../components/TrackRow';
 import AlbumCard from '../components/AlbumCard';
-import { Music, Headphones } from 'lucide-react';
+import { Music, Headphones, Radio } from 'lucide-react';
 
 export default function ArtistDetail() {
   const { spotifyId } = useParams();
@@ -136,6 +136,16 @@ export default function ArtistDetail() {
                   >
                     <Headphones className="w-5 h-5" />
                     Listen on Amazon Music
+                  </a>
+
+                  <a 
+                    href={`https://www.jiosaavn.com/search/${encodeURIComponent(artist.name)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#2bc5b4] hover:bg-[#25ab9c] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#2bc5b4]/20 gap-2"
+                  >
+                    <Radio className="w-5 h-5" />
+                    Listen on JioSaavn
                   </a>
                 </div>
               </div>
