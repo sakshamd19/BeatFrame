@@ -95,9 +95,11 @@ export default function Profile() {
     <div className="flex-1 flex flex-col items-center justify-center min-h-[70vh] px-4 text-center bg-[#0a0a0a]">
       <h1 className="text-6xl font-black text-white mb-4">404</h1>
       <h2 className="text-2xl font-bold text-[#94a3b8] mb-8">User Not Found</h2>
-      <p className="text-[#64748b] max-w-md mb-8">The profile you're looking for doesn't exist.</p>
-      <Link to="/explore" className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
-        Return to Explore
+      <p className="text-[#64748b] max-w-md mb-8">
+        The profile <span className="font-bold text-white">@{username}</span> doesn't exist yet.
+      </p>
+      <Link to={`/signup?username=${username}`} className="px-8 py-4 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-bold text-lg transition-all shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] hover:scale-105">
+        Claim @{username}
       </Link>
     </div>
   );

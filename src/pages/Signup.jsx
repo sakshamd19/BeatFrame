@@ -25,6 +25,16 @@ export default function Signup() {
     password: '',
     confirmPassword: ''
   });
+
+  // Prefill username if provided in URL (e.g., from a 404 Profile page)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const prefillUsername = params.get('username');
+    if (prefillUsername) {
+      setFormData(prev => ({ ...prev, username: prefillUsername.toLowerCase() }));
+    }
+  }, [location.search]);
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [checkingUsername, setCheckingUsername] = useState(false);
