@@ -31,7 +31,8 @@ export default function Signup() {
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [success, setSuccess] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [turnstileToken, setTurnstileToken] = useState(null);
+  const hasTurnstileKey = !!import.meta.env.VITE_TURNSTILE_SITEKEY;
+  const [turnstileToken, setTurnstileToken] = useState(hasTurnstileKey ? null : 'dev-bypass-token');
 
   // Step 2 State
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -402,14 +403,16 @@ export default function Signup() {
               </div>
 
               {/* Turnstile Bot Protection */}
-              <div className="pt-4 pb-2 flex justify-center w-full min-h-[70px]">
-                <Turnstile 
-                  siteKey={import.meta.env.VITE_TURNSTILE_SITEKEY || '1x00000000000000000000AA'} // dummy key fallback for dev
-                  onSuccess={(token) => setTurnstileToken(token)}
-                  onError={() => setErrors({ submit: 'Turnstile failed to load or verify.' })}
-                  options={{ theme: 'dark', size: 'flexible' }}
-                />
-              </div>
+              {hasTurnstileKey && (
+                <div className="pt-4 pb-2 flex justify-center w-full min-h-[70px]">
+                  <Turnstile 
+                    siteKey={import.meta.env.VITE_TURNSTILE_SITEKEY}
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    onError={() => setErrors({ submit: 'Turnstile failed to load or verify.' })}
+                    options={{ theme: 'dark', size: 'flexible' }}
+                  />
+                </div>
+              )}
 
               <button 
                 type="submit" 
