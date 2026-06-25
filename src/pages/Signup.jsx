@@ -314,10 +314,10 @@ export default function Signup() {
       </div>
 
       {/* RIGHT HALF: Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-24 relative overflow-y-auto z-10">
+      <div className="w-full lg:w-1/2 flex flex-col px-6 py-12 sm:px-12 lg:px-24 relative overflow-y-auto z-10">
         <HeroOrbs />
         
-        <div className="w-full max-w-md mx-auto py-8 animate-fade-in-up">
+        <div className="w-full max-w-md mx-auto my-auto py-8 animate-fade-in-up">
           <div className="mb-10 text-center lg:text-left">
             <Link to="/" className="inline-flex items-center gap-2 mb-8">
               <Music className="w-8 h-8 text-secondary" />
@@ -402,13 +402,15 @@ export default function Signup() {
               </div>
 
               {/* Turnstile Bot Protection */}
-              <div className="pt-2 flex justify-center">
-                <Turnstile 
-                  siteKey={import.meta.env.VITE_TURNSTILE_SITEKEY || '1x00000000000000000000AA'} // dummy key fallback for dev
-                  onSuccess={(token) => setTurnstileToken(token)}
-                  onError={() => setErrors({ submit: 'Turnstile failed to load or verify.' })}
-                  options={{ theme: 'dark' }}
-                />
+              <div className="pt-2 flex justify-center w-full overflow-hidden sm:overflow-visible">
+                <div className="w-full flex justify-center max-w-[300px]">
+                  <Turnstile 
+                    siteKey={import.meta.env.VITE_TURNSTILE_SITEKEY || '1x00000000000000000000AA'} // dummy key fallback for dev
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    onError={() => setErrors({ submit: 'Turnstile failed to load or verify.' })}
+                    options={{ theme: 'dark', size: 'flexible' }}
+                  />
+                </div>
               </div>
 
               <button 
