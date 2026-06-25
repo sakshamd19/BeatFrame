@@ -318,7 +318,7 @@ export default function Signup() {
       <div className="w-full lg:w-1/2 flex flex-col px-6 py-12 sm:px-12 lg:px-24 relative overflow-y-auto z-10 min-h-[100dvh]">
         <HeroOrbs />
         
-        <div className="w-full max-w-md mx-auto my-auto py-8 animate-fade-in-up">
+        <div className="w-full max-w-md mx-auto mt-8 lg:mt-16 mb-auto py-8 animate-fade-in-up">
           <div className="mb-10 text-center lg:text-left">
             <Link to="/" className="inline-flex items-center gap-2 mb-8">
               <Music className="w-8 h-8 text-secondary" />
@@ -453,10 +453,10 @@ export default function Signup() {
                       <button
                         key={genre}
                         onClick={() => toggleGenre(genre)}
-                        className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
+                        className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all border ${
                           isSelected 
                             ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-[0_0_15px_rgba(124,58,237,0.4)] scale-105 border-transparent' 
-                            : 'bg-transparent border border-white/20 text-[#94a3b8] hover:text-white hover:border-white/40'
+                            : 'bg-transparent border-white/20 text-[#94a3b8] hover:text-white hover:border-white/40'
                         }`}
                       >
                         {genre}
