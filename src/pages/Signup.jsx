@@ -405,12 +405,14 @@ export default function Signup() {
               {/* Turnstile Bot Protection */}
               {hasTurnstileKey && (
                 <div className="pt-4 pb-2 flex justify-center w-full min-h-[70px]">
-                  <Turnstile 
-                    siteKey={import.meta.env.VITE_TURNSTILE_SITEKEY}
-                    onSuccess={(token) => setTurnstileToken(token)}
-                    onError={() => setErrors({ submit: 'Turnstile failed to load or verify.' })}
-                    options={{ theme: 'dark', size: 'flexible' }}
-                  />
+                  <div className="scale-90 sm:scale-100 origin-center">
+                    <Turnstile 
+                      siteKey={import.meta.env.VITE_TURNSTILE_SITEKEY}
+                      onSuccess={(token) => setTurnstileToken(token)}
+                      onError={() => setErrors({ submit: 'Turnstile failed to load or verify.' })}
+                      options={{ theme: 'dark' }}
+                    />
+                  </div>
                 </div>
               )}
 
