@@ -280,7 +280,7 @@ export default function Explore() {
           <div className="lg:col-span-8">
             
             {/* Filter Pills */}
-            <div className="sticky top-20 z-40 py-4 mb-10 bg-background/80 backdrop-blur-xl border-b border-white/5 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="sticky top-20 z-40 py-4 mb-10 -mx-4 px-4 sm:mx-0 sm:px-0">
               <div className="inline-flex flex-wrap sm:flex-nowrap items-center bg-[#141414] rounded-3xl sm:rounded-full p-1.5 border border-white/5 shadow-inner gap-1 max-w-full overflow-x-auto scrollbar-hide">
                 {filters.map(f => (
                   <button
