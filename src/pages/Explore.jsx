@@ -159,7 +159,7 @@ export default function Explore() {
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
           <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-7xl mb-6 tracking-tight">
-            What <GradientText>Soundtale</GradientText> is Hearing
+            What <GradientText>SargamBeat</GradientText> is Hearing
           </h1>
           <p className="text-lg text-[#94a3b8] font-medium max-w-2xl mx-auto">
             Discover the latest drops, read passionate reviews, and find your next favorite track through the ears of our community.

@@ -354,10 +354,10 @@ export default function Signup() {
           <div className="mb-10 text-center lg:text-left">
             <Link to="/" className="inline-flex items-center gap-2 mb-8">
               <Music className="w-8 h-8 text-secondary" />
-              <span className="font-display font-bold text-2xl text-white">Soundtale</span>
+              <span className="font-display font-bold text-2xl text-white">SargamBeat</span>
             </Link>
             <h2 className="text-4xl sm:text-5xl font-display font-bold text-white tracking-tight mb-3">
-              {step === 1 ? <>Join <GradientText>Soundtale</GradientText></> : <>Your <GradientText>Taste</GradientText></>}
+              {step === 1 ? <>Join <GradientText>SargamBeat</GradientText></> : <>Your <GradientText>Taste</GradientText></>}
             </h2>
             <p className="text-[#94a3b8] font-medium text-lg">
               {step === 1 ? 'Start reviewing music you love.' : 'Personalize your concert experience.'}

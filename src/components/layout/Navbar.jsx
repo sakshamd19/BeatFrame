@@ -38,7 +38,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-3 group">
               <FrequencyBars className="group-hover:opacity-80 transition-opacity" />
-              <span className="font-display font-bold text-2xl tracking-tight text-white group-hover:gradient-text transition-all">Soundtale</span>
+              <span className="font-display font-bold text-2xl tracking-tight text-white group-hover:gradient-text transition-all">SargamBeat</span>
             </Link>
           </div>
           
