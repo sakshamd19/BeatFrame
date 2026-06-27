@@ -22,8 +22,7 @@ export default function EditProfile() {
     fullName: '',
     username: '',
     bio: '',
-    avatar_url: '',
-    spotify_url: ''
+    avatar_url: ''
   });
 
   const [authForm, setAuthForm] = useState({
@@ -61,8 +60,7 @@ export default function EditProfile() {
           fullName: profileData.full_name || '',
           username: profileData.username || '',
           bio: profileData.bio || '',
-          avatar_url: profileData.avatar_url || '',
-          spotify_url: profileData.spotify_url || ''
+          avatar_url: profileData.avatar_url || ''
         });
         
         setAuthForm(prev => ({ ...prev, email: user.email || '' }));
@@ -193,7 +191,6 @@ export default function EditProfile() {
           username: formData.username.toLowerCase(),
           bio: formData.bio,
           avatar_url: formData.avatar_url,
-          spotify_url: formData.spotify_url,
           favorite_genres: selectedGenres,
           favorite_artists: selectedArtists
         })
@@ -382,17 +379,6 @@ export default function EditProfile() {
                   value={formData.username} 
                   onChange={(e) => setFormData({...formData, username: e.target.value.toLowerCase()})}
                   className="w-full px-4 py-3 border border-[#27272a] rounded-lg bg-[#0a0a0a] text-white focus:outline-none focus:border-[#8b5cf6] transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#9ca3af] mb-2" htmlFor="spotify_url">Spotify Profile Link</label>
-                <input 
-                  id="spotify_url" type="url" 
-                  value={formData.spotify_url} 
-                  onChange={(e) => setFormData({...formData, spotify_url: e.target.value})}
-                  placeholder="https://open.spotify.com/user/..."
-                  className="w-full px-4 py-3 border border-[#27272a] rounded-lg bg-[#0a0a0a] text-white placeholder-[#6b7280] focus:outline-none focus:border-[#1db954] transition-colors"
                 />
               </div>
 
