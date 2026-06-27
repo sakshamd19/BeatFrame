@@ -23,22 +23,27 @@ export default function AlbumHeader({ album }) {
   albumLabel = albumLabel || 'Independent';
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left mb-12">
+    <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start text-center md:text-left mb-12">
       <div className="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 rounded-xl overflow-hidden shadow-[0_0_30px_rgba(124,58,237,0.15)] border border-white/5">
         <img src={imageUrl} alt={album.name} className="w-full h-full object-cover" />
       </div>
-      <div className="flex-1 flex flex-col xl:flex-row gap-8 justify-between w-full items-center md:items-start xl:items-center">
-        <div className="flex flex-col justify-center min-h-[12rem] md:min-h-[16rem] py-2 flex-1 w-full">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight leading-tight">
-            {album.name}
-          </h1>
-          <p className="text-xl md:text-2xl text-[#9ca3af] mb-2 font-medium">
-            {artistLinks}
-          </p>
-          <p className="text-sm text-[#6b7280] mb-8 uppercase tracking-wider font-semibold">
-            {releaseYear} • {album.total_tracks} tracks
-          </p>
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 w-full">
+      <div className="flex-1 flex flex-col justify-center min-h-[12rem] md:min-h-[16rem] py-2 w-full">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight leading-tight">
+          {album.name}
+        </h1>
+        <p className="text-xl md:text-2xl text-[#9ca3af] mb-4 font-medium">
+          {artistLinks}
+        </p>
+        <p className="text-sm text-[#d1d5db] mb-8 uppercase tracking-wider font-semibold flex flex-wrap items-center justify-center md:justify-start gap-2">
+          <span>{releaseYear}</span>
+          <span className="text-[#6b7280]">•</span>
+          <span className="truncate max-w-[200px] sm:max-w-xs">{albumLabel}</span>
+          <span className="text-[#6b7280]">•</span>
+          <span className="capitalize">{album.album_type}</span>
+          <span className="text-[#6b7280]">•</span>
+          <span>{album.total_tracks} tracks</span>
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6 w-full">
             {album.external_urls?.spotify && (
               <a 
                 href={album.external_urls.spotify}
@@ -52,69 +57,48 @@ export default function AlbumHeader({ album }) {
                 Listen on Spotify
               </a>
             )}
-            
+          <div className="flex items-center gap-3 mt-4 sm:mt-0">
             <a 
               href={`https://www.youtube.com/results?search_query=${encodeURIComponent(album.name + ' ' + (album.artists?.[0]?.name || ''))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#ff0000]/20 gap-2"
+              className="p-3 text-[#6b7280] hover:text-[#ff0000] hover:bg-[#ff0000]/10 rounded-full transition-all"
+              title="Listen on YouTube"
             >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
               </svg>
-              Listen on YouTube
             </a>
 
             <a 
               href={`https://music.apple.com/search?term=${encodeURIComponent(album.name + ' ' + (album.artists?.[0]?.name || ''))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#fa243c] hover:bg-[#e02036] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#fa243c]/20 gap-2"
+              className="p-3 text-[#6b7280] hover:text-[#fa243c] hover:bg-[#fa243c]/10 rounded-full transition-all"
+              title="Listen on Apple Music"
             >
-              <Music className="w-5 h-5" />
-              Listen on Apple Music
+              <Music className="w-6 h-6" />
             </a>
 
             <a 
               href={`https://music.amazon.com/search/${encodeURIComponent(album.name + ' ' + (album.artists?.[0]?.name || ''))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#00a8e1] hover:bg-[#0096c9] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#00a8e1]/20 gap-2"
+              className="p-3 text-[#6b7280] hover:text-[#00a8e1] hover:bg-[#00a8e1]/10 rounded-full transition-all"
+              title="Listen on Amazon Music"
             >
-              <Headphones className="w-5 h-5" />
-              Listen on Amazon Music
+              <Headphones className="w-6 h-6" />
             </a>
 
             <a 
               href={`https://www.jiosaavn.com/search/${encodeURIComponent(album.name + ' ' + (album.artists?.[0]?.name || ''))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#2bc5b4] hover:bg-[#25ab9c] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#2bc5b4]/20 gap-2"
+              className="p-3 text-[#6b7280] hover:text-[#2bc5b4] hover:bg-[#2bc5b4]/10 rounded-full transition-all"
+              title="Listen on JioSaavn"
             >
-              <Radio className="w-5 h-5" />
-              Listen on JioSaavn
+              <Radio className="w-6 h-6" />
             </a>
-          </div>
-        </div>
-
-        <div className="flex flex-col justify-center bg-surface1 p-6 rounded-2xl border border-white/5 shadow-xl w-full xl:w-72 flex-shrink-0 mt-4 xl:mt-0 text-left">
-          <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(124,58,237,0.8)]"></span>
-            Album Info
-          </h3>
-          <div className="space-y-4 text-sm">
-            <div className="flex justify-between items-center border-b border-white/5 pb-2">
-              <span className="text-[#9ca3af]">Released</span>
-              <span className="text-white font-medium">{album.release_date}</span>
-            </div>
-            <div className="flex justify-between items-center border-b border-white/5 pb-2">
-              <span className="text-[#9ca3af]">Label</span>
-              <span className="text-white font-medium truncate ml-4" title={albumLabel}>{albumLabel}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[#9ca3af]">Type</span>
-              <span className="text-white font-medium capitalize">{album.album_type}</span>
-            </div>
           </div>
         </div>
       </div>

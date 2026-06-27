@@ -97,15 +97,15 @@ export default function InlineReviewForm({ item, type, onSuccess }) {
           </div>
 
           {/* Rating Toggle */}
-          <div className="flex items-center bg-[#1f2937] rounded-full p-1 border border-white/5">
+          <div className="flex items-center bg-[#141414] rounded-full p-1 border border-white/5 shadow-inner">
             {ratings.map((r) => (
               <button
                 key={r.id}
                 type="button"
                 onClick={() => setRating(r.id)}
                 className={`
-                  px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200
-                  ${rating === r.id ? r.activeClass : `text-[#9ca3af] ${r.hoverClass}`}
+                  px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 border border-transparent
+                  ${rating === r.id ? `${r.activeClass} shadow-md scale-105 z-10` : `text-[#6b7280] hover:text-white hover:bg-white/5`}
                 `}
               >
                 {r.label}
@@ -115,14 +115,16 @@ export default function InlineReviewForm({ item, type, onSuccess }) {
         </div>
 
         {/* Text Input */}
-        <textarea
-          value={reviewText}
-          onChange={(e) => setReviewText(e.target.value)}
-          placeholder="Write your review here..."
-          maxLength={1000}
-          className="w-full bg-transparent border-b border-white/10 text-white placeholder-[#6b7280] p-0 pb-2 mb-2 focus:ring-0 focus:border-[#8b5cf6] resize-none outline-none"
-          rows={3}
-        />
+        <div className="bg-[#141414] rounded-xl border border-white/5 focus-within:border-[#8b5cf6] focus-within:ring-1 focus-within:ring-[#8b5cf6]/50 transition-all p-3 mb-3">
+          <textarea
+            value={reviewText}
+            onChange={(e) => setReviewText(e.target.value)}
+            placeholder="What are your thoughts? Write your review here..."
+            maxLength={1000}
+            className="w-full bg-transparent text-white placeholder-[#6b7280] p-0 focus:ring-0 border-none resize-none outline-none min-h-[80px]"
+            rows={3}
+          />
+        </div>
         
         {/* Footer */}
         <div className="flex items-center justify-between mt-2">

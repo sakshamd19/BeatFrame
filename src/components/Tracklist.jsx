@@ -17,12 +17,12 @@ export default function Tracklist({ tracks }) {
       </div>
       <div className="divide-y divide-[#27272a]">
         {tracks.map((track, i) => (
-          <Link to={`/track/${track.id}`} key={track.id} className="flex items-center px-4 py-3 hover:bg-[#1a1a1a] transition-colors group">
+          <Link to={`/track/${track.id}`} key={track.id} className="flex items-center px-4 py-3 hover:bg-[#1a1a1a] even:bg-white/[0.02] transition-colors group">
             <span className="w-8 text-sm text-[#6b7280] font-mono">{i + 1}</span>
             <span className="flex-1 text-white text-sm font-medium group-hover:text-[#8b5cf6] transition-colors truncate pr-4">
               {track.name}
             </span>
-            <span className="text-sm text-[#6b7280] font-mono">
+            <span className="text-sm text-[#6b7280] font-mono group-hover:text-white transition-colors">
               {formatDuration(track.duration_ms)}
             </span>
           </Link>

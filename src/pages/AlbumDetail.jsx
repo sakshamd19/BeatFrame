@@ -120,7 +120,7 @@ export default function AlbumDetail() {
           <div className="lg:col-span-2">
             {reviews.length > 0 && <ReviewStats reviews={reviews} />}
             
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/5 pb-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
               <div>
                 <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                   Reviews
@@ -137,7 +137,7 @@ export default function AlbumDetail() {
                 <select 
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-[#141414] border border-white/10 text-white rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-[#8b5cf6]"
+                  className="bg-surface1 border border-white/10 text-white rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-[#8b5cf6] hover:border-white/30 transition-colors"
                 >
                   <option value="recent">↓ Recent</option>
                   <option value="liked">⇅ Most Liked</option>

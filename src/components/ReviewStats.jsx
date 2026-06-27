@@ -45,9 +45,9 @@ export default function ReviewStats({ reviews }) {
   };
 
   // SVG calculations for a semicircular donut (top half of circle)
-  // We use a radius of 100, which makes circumference C = 2 * PI * 100 = ~628.32
-  // A semicircle length is C / 2 = 314.16.
-  const radius = 100;
+  // We use a radius of 70, which makes circumference C = 2 * PI * 70 = ~439.82
+  // A semicircle length is C / 2 = 219.91.
+  const radius = 70;
   const circumference = 2 * Math.PI * radius;
   const semiCircumference = circumference / 2;
 
@@ -76,12 +76,12 @@ export default function ReviewStats({ reviews }) {
     if (length === 0) return null;
     return (
       <circle
-        cx="120"
-        cy="120"
+        cx="90"
+        cy="90"
         r={radius}
         fill="transparent"
         stroke={color}
-        strokeWidth="16"
+        strokeWidth="12"
         strokeLinecap="butt"
         strokeDasharray={`${length} ${circumference - length}`}
         strokeDashoffset={-offset}
@@ -91,24 +91,24 @@ export default function ReviewStats({ reviews }) {
   };
 
   return (
-    <div className="flex flex-col items-center mb-12">
+    <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 mb-8 w-full border-b border-white/5 pb-8">
       {/* Donut Chart */}
-      <div className="relative w-[240px] h-[120px] overflow-hidden mb-8">
+      <div className="relative w-[180px] h-[90px] overflow-hidden flex-shrink-0">
         <svg 
-          width="240" 
-          height="240" 
-          viewBox="0 0 240 240"
+          width="180" 
+          height="180" 
+          viewBox="0 0 180 180"
           className="absolute top-0 left-0"
           style={{ transform: 'rotate(180deg)' }} // Rotate so drawing starts from left (9 o'clock)
         >
           {/* Background track */}
           <circle
-            cx="120"
-            cy="120"
+            cx="90"
+            cy="90"
             r={radius}
             fill="transparent"
             stroke="#1f2937"
-            strokeWidth="16"
+            strokeWidth="12"
             strokeDasharray={`${semiCircumference} ${circumference}`}
             strokeDashoffset="0"
           />
@@ -120,21 +120,21 @@ export default function ReviewStats({ reviews }) {
         </svg>
 
         {/* Center Text */}
-        <div className="absolute bottom-2 left-0 right-0 flex flex-col items-center pb-2">
+        <div className="absolute bottom-1 left-0 right-0 flex flex-col items-center pb-1">
           <div 
-            className="text-4xl font-semibold mb-0.5 tracking-tight"
+            className="text-3xl font-semibold mb-0 tracking-tight"
             style={{ color: colors[highestCat] }}
           >
             {percentages[highestCat]}%
           </div>
-          <div className="text-[#9ca3af] text-xs font-medium">
+          <div className="text-[#9ca3af] text-[10px] font-medium">
             {highestCount}/{total} Votes
           </div>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs font-medium border-b border-white/5 pb-8 w-full max-w-2xl">
+      <div className="flex flex-wrap justify-center md:justify-end gap-3 sm:gap-4 text-xs font-medium w-full">
         {['skip', 'decent', 'fire', 'banger'].map((key) => (
           <div key={key} className="flex items-center gap-2">
             <span 
