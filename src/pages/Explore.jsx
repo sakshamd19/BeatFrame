@@ -150,17 +150,7 @@ export default function Explore() {
     return review.rating?.toLowerCase() === filter.toLowerCase();
   });
 
-  if (reviewsLoading) {
-    return (
-      <div className="min-h-[calc(100vh-5rem)] flex justify-center items-center">
-        <div className="flex gap-2">
-          <div className="w-2 h-8 bg-primary animate-equalizer" style={{ animationDelay: '0s' }}></div>
-          <div className="w-2 h-8 bg-secondary animate-equalizer" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-2 h-8 bg-banger animate-equalizer" style={{ animationDelay: '0.4s' }}></div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="pb-24 pt-24 sm:pt-32 min-h-screen">
@@ -311,7 +301,11 @@ export default function Explore() {
             </div>
 
             <div className="flex flex-col gap-6">
-              {allReviews.length === 0 ? (
+              {reviewsLoading ? (
+                [...Array(3)].map((_, i) => (
+                  <div key={i} className="h-48 bg-surface1 border border-white/5 rounded-2xl animate-pulse"></div>
+                ))
+              ) : allReviews.length === 0 ? (
                 <div className="py-20 text-center bg-surface1 gradient-border-1px rounded-2xl animate-fade-in-up">
                   <p className="text-white font-bold text-xl mb-2">No reviews yet!</p>
                   <p className="text-[#94a3b8] font-medium mb-6">Be the first to share your music taste.</p>
