@@ -463,7 +463,7 @@ export default function Signup() {
             <div className="space-y-10 animate-fade-in-up">
               
               <div>
-                <h3 className="font-display font-bold text-xl text-white mb-4">Tell us about yourself</h3>
+                <h3 className="font-display font-bold text-xl text-white mb-4">Bio</h3>
                 <div className="relative group">
                   <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} onBlur={handleBlur} required rows={3}
                     className="block w-full bg-surface1 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-[#94a3b8] focus:outline-none focus:ring-0 focus:border-white/30 transition-colors resize-none" placeholder="Your music taste, favorite concerts, etc." />
