@@ -55,7 +55,7 @@ export default function SearchBar({ onSearch, initialValue = '' }) {
         ref={inputRef}
         type="text"
         className="block w-full pl-12 sm:pl-16 pr-12 sm:pr-14 py-4 sm:py-5 bg-surface1 border-2 border-primary/50 rounded-full text-white placeholder-[#475569] font-display text-base sm:text-xl focus:outline-none focus:border-secondary focus:shadow-[0_0_30px_rgba(124,58,237,0.3)] transition-all"
-        placeholder="Search albums, artists, songs..."
+        placeholder="Search albums, artists, songs, or @users..."
         value={query}
         onChange={handleChange}
       />
