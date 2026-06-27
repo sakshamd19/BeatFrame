@@ -23,7 +23,8 @@ export default function Signup() {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    bio: ''
   });
 
   // Prefill username if provided in URL (e.g., from a 404 Profile page)
@@ -125,6 +126,7 @@ export default function Signup() {
   const validateField = (name, value) => {
     let error = '';
     if (name === 'fullName' && !value) error = 'Full name is required';
+    if (name === 'bio' && !value) error = 'Bio is required';
     if (name === 'username') {
       if (!value) error = 'Username is required';
       else if (!/^[a-z0-9_]{3,20}$/.test(value)) error = 'Must be 3-20 chars: lowercase, numbers, underscores';
@@ -147,6 +149,7 @@ export default function Signup() {
   const validate = () => {
     const newErrors = {};
     if (!formData.fullName) newErrors.fullName = 'Full name is required';
+    if (!formData.bio) newErrors.bio = 'Bio is required';
     
     if (!formData.username) {
       newErrors.username = 'Username is required';
@@ -237,7 +240,8 @@ export default function Signup() {
           .insert({
             id: data.user.id,
             username: formData.username,
-            full_name: formData.fullName
+            full_name: formData.fullName,
+            bio: formData.bio
           });
 
         if (profileError) throw profileError;
@@ -386,6 +390,14 @@ export default function Signup() {
 
                   {errors.username && <p className="mt-1 text-xs text-red-500">{errors.username}</p>}
                 </div>
+              </div>
+
+              <div className="relative group pt-2">
+                <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} onBlur={handleBlur} required rows={2}
+                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer resize-none" placeholder="Tell us about your music taste..." />
+                <label htmlFor="bio" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Bio</label>
+                <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
+                {errors.bio && <p className="mt-1 text-xs text-red-500">{errors.bio}</p>}
               </div>
 
               <div className="relative group pt-2">
