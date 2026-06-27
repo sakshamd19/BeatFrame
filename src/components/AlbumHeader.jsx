@@ -44,6 +44,7 @@ export default function AlbumHeader({ album }) {
           <span>{album.total_tracks} tracks</span>
         </p>
           <div className="flex items-center gap-3 mt-4 sm:mt-0 flex-wrap justify-center md:justify-start">
+            <span className="text-[#9ca3af] text-sm font-medium mr-2">Listen on:</span>
             {album.external_urls?.spotify && (
               <a 
                 href={album.external_urls.spotify}
