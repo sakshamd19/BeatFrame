@@ -114,9 +114,6 @@ export default function Explore() {
         }
 
         let seed_genres = [];
-        if (profile?.favorite_genres?.length > 0) {
-          seed_genres = [profile.favorite_genres[0].toLowerCase().replace(/ /g, '-')];
-        }
         
         // Skip if no seeds
         if (seed_tracks.length === 0 && seed_artists.length === 0 && seed_genres.length === 0) {
@@ -276,20 +273,29 @@ export default function Explore() {
             </div>
 
             {/* Recommended For You Section */}
-            {filter === 'All' && user && recommendations.length > 0 && (
+            {filter === 'All' && user && (
               <div className="mb-12 animate-fade-in-up">
                 <div className="flex items-center gap-3 mb-6">
                   <Sparkles className="w-5 h-5 text-secondary" />
                   <h2 className="font-display font-bold text-xl text-white">Recommended For You</h2>
                 </div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                  {recommendations.slice(0, 5).map((album, i) => (
-                    <div key={album.id} style={{ animationDelay: `${i * 0.1}s` }} className="animate-fade-in-up">
-                      <AlbumCard album={album} />
-                    </div>
-                  ))}
-                </div>
+                {recommendations.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    {recommendations.slice(0, 5).map((album, i) => (
+                      <div key={album.id} style={{ animationDelay: `${i * 0.1}s` }} className="animate-fade-in-up">
+                        <AlbumCard album={album} />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-12 text-center bg-surface1/50 rounded-xl border border-white/5">
+                    <p className="text-[#94a3b8] font-medium mb-4">We need a little more info to make recommendations.</p>
+                    <Link to="/settings" className="text-primary hover:text-white transition-colors text-sm font-bold">
+                      Add Favorite Artists to Profile →
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
 
