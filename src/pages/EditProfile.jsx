@@ -186,7 +186,7 @@ export default function EditProfile() {
     }
 
     try {
-      const { error: updateError } = await supabase
+      const { data: updatedData, error: updateError } = await supabase
         .from('profiles')
         .update({
           full_name: formData.fullName,
@@ -197,9 +197,15 @@ export default function EditProfile() {
           favorite_genres: selectedGenres,
           favorite_artists: selectedArtists
         })
-        .eq('id', user.id);
+        .eq('id', user.id)
+        .select();
 
+      console.log('Update result:', updatedData, updateError);
       if (updateError) throw updateError;
+      
+      if (!updatedData || updatedData.length === 0) {
+        throw new Error("Update failed: No rows modified. Please check your database permissions.");
+      }
       
       navigate(`/profile/${formData.username.toLowerCase()}`);
     } catch (err) {
