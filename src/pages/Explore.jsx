@@ -282,23 +282,31 @@ export default function Explore() {
             {/* Filter Pills */}
             <div className="sticky top-20 z-40 py-4 mb-10 -mx-4 px-4 sm:mx-0 sm:px-0">
               <div className="inline-flex flex-wrap sm:flex-nowrap items-center bg-[#141414] rounded-3xl sm:rounded-full p-1.5 border border-white/5 shadow-inner gap-1 max-w-full overflow-x-auto scrollbar-hide">
-                {filters.map(f => (
-                  <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 border border-transparent whitespace-nowrap ${
-                      filter === f 
-                        ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md scale-[1.02]' 
-                        : 'text-[#6b7280] hover:text-white hover:bg-white/5'
-                    }`}
-                  >
+                {filters.map(f => {
+                  const filterColors = {
+                    'All': 'bg-gradient-to-r from-primary to-secondary text-white shadow-md scale-[1.02]',
+                    'Bangers': 'bg-[#8b5cf6] text-white shadow-md scale-[1.02]',
+                    'Fire': 'bg-[#f97316] text-white shadow-md scale-[1.02]',
+                    'Decent': 'bg-[#3b82f6] text-white shadow-md scale-[1.02]',
+                    'Skip': 'bg-[#6b7280] text-white shadow-md scale-[1.02]',
+                  };
+                  return (
+                    <button
+                      key={f}
+                      onClick={() => setFilter(f)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 border border-transparent whitespace-nowrap ${
+                        filter === f 
+                          ? filterColors[f] 
+                          : 'text-[#6b7280] hover:text-white hover:bg-white/5'
+                      }`}
+                    >
                     {f === 'Bangers' && <Flame className="w-4 h-4" />}
                     {f === 'Fire' && <Zap className="w-4 h-4" />}
                     {f === 'Decent' && <ThumbsUp className="w-4 h-4" />}
                     {f === 'Skip' && <SkipForward className="w-4 h-4" />}
                     <span>{f === 'All' ? 'All Reviews' : f}</span>
                   </button>
-                ))}
+                )})}
               </div>
             </div>
 
