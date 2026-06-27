@@ -1,6 +1,6 @@
-# BeatFrame 🎵
+# SargamBeat 🎵
 
-BeatFrame is a modern music review platform that allows users to discover the latest drops, write passionate reviews, rate tracks, and see what the community is listening to. 
+SargamBeat is a modern music review platform that allows users to discover the latest drops, write passionate reviews, rate tracks, and see what the community is listening to.
 
 ## ✨ Features
 
