@@ -33,6 +33,9 @@ export default function EditProfile() {
   const [updatingAuth, setUpdatingAuth] = useState(false);
   const [authMessage, setAuthMessage] = useState(null);
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
+
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -255,6 +258,25 @@ export default function EditProfile() {
       setAuthMessage({ type: 'error', text: err.message });
     } finally {
       setUpdatingAuth(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeletingAccount(true);
+    setError(null);
+    try {
+      const { error: rpcError } = await supabase.rpc('delete_user');
+      if (rpcError) {
+        throw new Error("Could not delete account. If you just created the app, you may need to run the delete_account_rpc.sql script in Supabase.");
+      }
+      await supabase.auth.signOut();
+      navigate('/login');
+    } catch (err) {
+      console.error("Delete account error:", err);
+      setError(err.message || 'Failed to delete account');
+      setShowDeleteConfirm(false);
+    } finally {
+      setDeletingAccount(false);
     }
   };
 
@@ -504,7 +526,52 @@ export default function EditProfile() {
           </div>
           
         </form>
+
+        {/* Danger Zone */}
+        <div className="mt-12 bg-[#141414] border border-red-500/20 rounded-xl p-6 md:p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4">
+            <div className="bg-red-500/10 text-red-400 text-xs font-bold px-2 py-1 rounded border border-red-500/20">DANGER</div>
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Delete Account</h2>
+          <p className="text-sm text-[#9ca3af] mb-6">Once you delete your account, there is no going back. Please be certain.</p>
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="px-6 py-3 bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 text-red-500 rounded-lg font-bold transition-colors"
+          >
+            Delete My Account
+          </button>
+        </div>
+
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
+          <div className="bg-[#141414] border border-red-500/20 rounded-xl p-8 max-w-md w-full shadow-2xl relative animate-fade-in-up">
+            <h3 className="font-display font-bold text-2xl text-white mb-4">Are you absolutely sure?</h3>
+            <p className="text-[#9ca3af] mb-8">
+              This action cannot be undone. This will permanently delete your account, your profile, and all of your reviews.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deletingAccount}
+                className="px-6 py-3 bg-surface2 hover:bg-[#27272a] text-white rounded-lg font-bold transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deletingAccount}
+                className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-colors shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {deletingAccount ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+                Yes, delete my account
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
