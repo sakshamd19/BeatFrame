@@ -246,6 +246,34 @@ export default function Explore() {
           </div>
         )}
 
+        {/* Recommended For You Section */}
+        {user && (
+          <div className="mb-20 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <div className="flex items-center gap-3 mb-6">
+              <Sparkles className="w-6 h-6 text-secondary" />
+              <h2 className="font-display font-bold text-2xl text-white">Recommended For You</h2>
+            </div>
+            
+            {recommendations.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {recommendations.slice(0, 5).map((album, i) => (
+                  <div key={album.id} style={{ animationDelay: `${i * 0.1}s` }} className="animate-fade-in-up">
+                    <AlbumCard album={album} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-12 text-center bg-surface1/50 rounded-xl border border-white/5">
+                <p className="text-[#94a3b8] font-medium mb-4">We need a little more info to make recommendations.</p>
+                <Link to="/settings" className="text-primary hover:text-white transition-colors text-sm font-bold">
+                  Add Favorite Artists to Profile →
+                </Link>
+              </div>
+            )}
+            <WaveformDivider className="mt-12 opacity-50" />
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Main Feed */}
@@ -271,33 +299,6 @@ export default function Explore() {
                 </button>
               ))}
             </div>
-
-            {/* Recommended For You Section */}
-            {filter === 'All' && user && (
-              <div className="mb-12 animate-fade-in-up">
-                <div className="flex items-center gap-3 mb-6">
-                  <Sparkles className="w-5 h-5 text-secondary" />
-                  <h2 className="font-display font-bold text-xl text-white">Recommended For You</h2>
-                </div>
-                
-                {recommendations.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {recommendations.slice(0, 5).map((album, i) => (
-                      <div key={album.id} style={{ animationDelay: `${i * 0.1}s` }} className="animate-fade-in-up">
-                        <AlbumCard album={album} />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="py-12 text-center bg-surface1/50 rounded-xl border border-white/5">
-                    <p className="text-[#94a3b8] font-medium mb-4">We need a little more info to make recommendations.</p>
-                    <Link to="/settings" className="text-primary hover:text-white transition-colors text-sm font-bold">
-                      Add Favorite Artists to Profile →
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
 
             <div className="flex flex-col gap-6">
               {allReviews.length === 0 ? (
