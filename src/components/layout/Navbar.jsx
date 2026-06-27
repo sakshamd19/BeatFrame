@@ -32,7 +32,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#050508]/80 backdrop-blur-xl border-b border-white/5' : 'bg-transparent'}`}>
+    <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#050508]/95 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
@@ -106,7 +106,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Drawer */}
-      <div className={`md:hidden absolute top-20 left-0 w-full bg-[#0f0f14]/95 backdrop-blur-2xl border-b border-white/5 transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+      <div className={`md:hidden absolute top-20 left-0 w-full bg-[#0f0f14]/95 backdrop-blur-md border-b border-white/5 transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
         <div className="px-4 py-6 flex flex-col gap-2">
           {navLinks.map(link => (
             <Link key={link.name} to={link.path} className="px-4 py-3 rounded-xl text-lg font-display font-medium text-[#94a3b8] hover:text-white hover:bg-white/5 transition-colors" onClick={() => setIsOpen(false)}>

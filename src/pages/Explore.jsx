@@ -191,7 +191,7 @@ export default function Explore() {
           <div className="lg:col-span-8">
             
             {/* Filter Pills */}
-            <div className="flex flex-wrap items-center gap-3 mb-10 sticky top-20 bg-background/95 backdrop-blur-md py-4 z-40 border-b border-white/5">
+            <div className="flex flex-wrap items-center gap-3 mb-10 sticky top-20 bg-[#050508]/98 py-4 z-40 border-b border-white/5">
               {filters.map(f => (
                 <button
                   key={f}
