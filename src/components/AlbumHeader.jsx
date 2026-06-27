@@ -49,7 +49,7 @@ export default function AlbumHeader({ album }) {
                 href={album.external_urls.spotify}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 text-[#6b7280] hover:text-[#1db954] hover:bg-[#1db954]/10 rounded-full transition-all"
+                className="p-3 text-[#1db954] hover:bg-[#1db954]/10 rounded-full transition-all"
                 title="Listen on Spotify"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -61,7 +61,7 @@ export default function AlbumHeader({ album }) {
               href={`https://www.youtube.com/results?search_query=${encodeURIComponent(album.name + ' ' + (album.artists?.[0]?.name || ''))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 text-[#6b7280] hover:text-[#ff0000] hover:bg-[#ff0000]/10 rounded-full transition-all"
+              className="p-3 text-[#ff0000] hover:bg-[#ff0000]/10 rounded-full transition-all"
               title="Listen on YouTube"
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -73,7 +73,7 @@ export default function AlbumHeader({ album }) {
               href={`https://music.apple.com/search?term=${encodeURIComponent(album.name + ' ' + (album.artists?.[0]?.name || ''))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 text-[#6b7280] hover:text-[#fa243c] hover:bg-[#fa243c]/10 rounded-full transition-all"
+              className="p-3 text-[#fa243c] hover:bg-[#fa243c]/10 rounded-full transition-all"
               title="Listen on Apple Music"
             >
               <Music className="w-6 h-6" />
@@ -83,7 +83,7 @@ export default function AlbumHeader({ album }) {
               href={`https://music.amazon.com/search/${encodeURIComponent(album.name + ' ' + (album.artists?.[0]?.name || ''))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 text-[#6b7280] hover:text-[#00a8e1] hover:bg-[#00a8e1]/10 rounded-full transition-all"
+              className="p-3 text-[#00a8e1] hover:bg-[#00a8e1]/10 rounded-full transition-all"
               title="Listen on Amazon Music"
             >
               <Headphones className="w-6 h-6" />
@@ -93,7 +93,7 @@ export default function AlbumHeader({ album }) {
               href={`https://www.jiosaavn.com/search/${encodeURIComponent(album.name + ' ' + (album.artists?.[0]?.name || ''))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 text-[#6b7280] hover:text-[#2bc5b4] hover:bg-[#2bc5b4]/10 rounded-full transition-all"
+              className="p-3 text-[#2bc5b4] hover:bg-[#2bc5b4]/10 rounded-full transition-all"
               title="Listen on JioSaavn"
             >
               <Radio className="w-6 h-6" />
