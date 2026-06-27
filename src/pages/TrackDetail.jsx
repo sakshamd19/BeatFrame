@@ -217,14 +217,21 @@ export default function TrackDetail() {
 
             {/* Filters Toolbar */}
             <div className="flex flex-wrap items-center gap-3">
-              <select 
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="bg-surface1 border border-white/10 text-white rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-[#8b5cf6] hover:border-white/30 transition-colors"
-              >
-                <option value="recent">↓ Recent</option>
-                <option value="liked">⇅ Most Liked</option>
-              </select>
+              <div className="relative group">
+                <select 
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="appearance-none bg-[#141414] border border-white/5 text-white rounded-full pl-4 pr-10 py-1.5 text-sm font-medium focus:outline-none focus:border-[#8b5cf6] focus:ring-1 focus:ring-[#8b5cf6]/50 hover:bg-white/5 transition-all shadow-inner cursor-pointer"
+                >
+                  <option value="recent">Recent</option>
+                  <option value="liked">Most Liked</option>
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#6b7280] group-hover:text-white transition-colors">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
           
