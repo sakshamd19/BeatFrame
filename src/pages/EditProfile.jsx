@@ -35,6 +35,8 @@ export default function EditProfile() {
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState(null);
 
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -262,9 +264,20 @@ export default function EditProfile() {
   };
 
   const handleDeleteAccount = async () => {
+    if (!deletePassword) {
+      setDeleteError("Current password is required to delete your account.");
+      return;
+    }
     setDeletingAccount(true);
-    setError(null);
+    setDeleteError(null);
     try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: deletePassword
+      });
+
+      if (signInError) throw new Error('Incorrect password.');
+
       const { error: rpcError } = await supabase.rpc('delete_user');
       if (rpcError) {
         throw new Error("Could not delete account. If you just created the app, you may need to run the delete_account_rpc.sql script in Supabase.");
@@ -273,8 +286,7 @@ export default function EditProfile() {
       navigate('/login');
     } catch (err) {
       console.error("Delete account error:", err);
-      setError(err.message || 'Failed to delete account');
-      setShowDeleteConfirm(false);
+      setDeleteError(err.message || 'Failed to delete account');
     } finally {
       setDeletingAccount(false);
     }
@@ -549,12 +561,33 @@ export default function EditProfile() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
           <div className="bg-[#141414] border border-red-500/20 rounded-xl p-8 max-w-md w-full shadow-2xl relative animate-fade-in-up">
             <h3 className="font-display font-bold text-2xl text-white mb-4">Are you absolutely sure?</h3>
-            <p className="text-[#9ca3af] mb-8">
+            <p className="text-[#9ca3af] mb-6">
               This action cannot be undone. This will permanently delete your account, your profile, and all of your reviews.
             </p>
+
+            {deleteError && (
+              <div className="bg-red-900/30 border border-red-500/50 text-red-300 p-3 rounded-lg text-sm mb-6">
+                {deleteError}
+              </div>
+            )}
+
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-white mb-2" htmlFor="deletePassword">Confirm Password</label>
+              <input 
+                id="deletePassword" type="password" 
+                value={deletePassword} 
+                onChange={(e) => setDeletePassword(e.target.value)}
+                placeholder="Enter your password"
+                className="w-full px-4 py-3 border border-red-500/30 rounded-lg bg-[#0a0a0a] text-white focus:outline-none focus:border-red-500 transition-colors"
+              />
+            </div>
             <div className="flex flex-col sm:flex-row justify-end gap-4">
               <button
-                onClick={() => setShowDeleteConfirm(false)}
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  setDeletePassword('');
+                  setDeleteError(null);
+                }}
                 disabled={deletingAccount}
                 className="px-6 py-3 bg-surface2 hover:bg-[#27272a] text-white rounded-lg font-bold transition-colors disabled:opacity-50"
               >
