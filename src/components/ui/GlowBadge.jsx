@@ -10,7 +10,7 @@ export default function GlowBadge({ rating, className = '' }) {
         bg: 'bg-[#4c1d95]/80',
         text: 'text-[#a855f7]',
         glow: 'shadow-[0_0_12px_rgba(168,85,247,0.4)]',
-        Icon: Flame,
+        Icon: Zap,
         label: 'BANGER'
       };
     } else if (r === 'fire') {
@@ -18,7 +18,7 @@ export default function GlowBadge({ rating, className = '' }) {
         bg: 'bg-[#431407]/80',
         text: 'text-[#f97316]',
         glow: 'shadow-[0_0_12px_rgba(249,115,22,0.4)]',
-        Icon: Zap,
+        Icon: Flame,
         label: 'FIRE'
       };
     } else if (r === 'decent') {

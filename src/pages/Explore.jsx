@@ -290,8 +290,8 @@ export default function Explore() {
                           : 'text-[#6b7280] hover:text-white hover:bg-white/5'
                       }`}
                     >
-                    {f === 'Bangers' && <Flame className="w-4 h-4" />}
-                    {f === 'Fire' && <Zap className="w-4 h-4" />}
+                    {f === 'Bangers' && <Zap className="w-4 h-4" />}
+                    {f === 'Fire' && <Flame className="w-4 h-4" />}
                     {f === 'Decent' && <ThumbsUp className="w-4 h-4" />}
                     {f === 'Skip' && <SkipForward className="w-4 h-4" />}
                     <span>{f === 'All' ? 'All Reviews' : f}</span>
