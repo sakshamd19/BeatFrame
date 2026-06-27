@@ -7,10 +7,10 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-2">
           <Music className="h-6 w-6 text-foreground" />
-          <span className="font-semibold text-foreground-light">BeatFrame</span>
+          <span className="font-semibold text-foreground-light">Soundtale</span>
         </div>
         <p className="text-foreground text-sm">
-          &copy; {new Date().getFullYear()} BeatFrame. Music review & rating platform.
+          &copy; {new Date().getFullYear()} Soundtale. Music review & rating platform.
         </p>
       </div>
     </footer>

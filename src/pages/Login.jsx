@@ -120,7 +120,7 @@ export default function Login() {
           <div className="mb-10 text-center lg:text-left">
             <Link to="/" className="inline-flex items-center gap-2 mb-8">
               <Music className="w-8 h-8 text-primary" />
-              <span className="font-display font-bold text-2xl text-white">BeatFrame</span>
+              <span className="font-display font-bold text-2xl text-white">Soundtale</span>
             </Link>
             <h2 className="text-4xl sm:text-5xl font-display font-bold text-white tracking-tight mb-3">
               Welcome <GradientText>Back</GradientText>
