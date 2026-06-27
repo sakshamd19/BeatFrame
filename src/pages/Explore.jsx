@@ -14,13 +14,38 @@ export default function Explore() {
   const [allReviews, setAllReviews] = useState([]);
   const [trendingGlobal, setTrendingGlobal] = useState([]);
   const [trendingIndia, setTrendingIndia] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [spotifyLoading, setSpotifyLoading] = useState(true);
   const [filter, setFilter] = useState('All');
 
+  // Fast fetch: Supabase Reviews
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchReviews = async () => {
       try {
-        setLoading(true);
+        setReviewsLoading(true);
+        const { data: reviewsData } = await supabase
+          .from('reviews')
+          .select(`*, profiles ( username, avatar_url ), likes ( count )`)
+          .order('created_at', { ascending: false })
+          .limit(50);
+          
+        if (reviewsData) {
+          setAllReviews(reviewsData.map(r => ({...r, likes_count: r.likes?.[0]?.count || 0})));
+        }
+      } catch (err) {
+        console.error('Explore reviews fetch error:', err);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+    fetchReviews();
+  }, []);
+
+  // Slow fetch: Spotify APIs
+  useEffect(() => {
+    const fetchSpotifyData = async () => {
+      try {
+        setSpotifyLoading(true);
         
         // 1. Fetch New Releases (Global and India)
         const [releasesGlobalData, releasesIndiaData] = await Promise.all([
@@ -35,18 +60,7 @@ export default function Explore() {
           setNewReleasesIndia(releasesIndiaData.albums.items.slice(0, 5));
         }
 
-        // 2. Fetch all reviews for the feed
-        const { data: reviewsData } = await supabase
-          .from('reviews')
-          .select(`*, profiles ( username, avatar_url ), likes ( count )`)
-          .order('created_at', { ascending: false })
-          .limit(50);
-          
-        if (reviewsData) {
-          setAllReviews(reviewsData.map(r => ({...r, likes_count: r.likes?.[0]?.count || 0})));
-        }
-
-        // 3. Fetch Trending (Global and India)
+        // 2. Fetch Trending (Global and India)
         const [globalData, indiaData] = await Promise.all([
           getTrendingTracks('global').catch(() => null),
           getTrendingTracks('India').catch(() => null)
@@ -59,12 +73,12 @@ export default function Explore() {
           setTrendingIndia(indiaData.items.map(item => item.track).filter(Boolean));
         }
       } catch (err) {
-        console.error('Explore fetch error:', err);
+        console.error('Explore spotify fetch error:', err);
       } finally {
-        setLoading(false);
+        setSpotifyLoading(false);
       }
     };
-    fetchData();
+    fetchSpotifyData();
   }, []);
 
   const filters = ['All', 'Bangers', 'Fire', 'Decent', 'Skip'];
@@ -75,7 +89,7 @@ export default function Explore() {
     return review.rating?.toLowerCase() === filter.toLowerCase();
   });
 
-  if (loading) {
+  if (reviewsLoading) {
     return (
       <div className="min-h-[calc(100vh-5rem)] flex justify-center items-center">
         <div className="flex gap-2">
@@ -102,7 +116,19 @@ export default function Explore() {
         </div>
 
         {/* Global Fresh Drops Banner */}
-        {newReleasesGlobal.length > 0 && (
+        {spotifyLoading ? (
+          <div className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-6 h-6 rounded-full bg-white/5 animate-pulse"></div>
+              <div className="h-8 w-48 bg-white/5 rounded-lg animate-pulse"></div>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="aspect-square rounded-xl bg-white/5 animate-pulse"></div>
+              ))}
+            </div>
+          </div>
+        ) : newReleasesGlobal.length > 0 && (
           <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
             <div className="flex items-center gap-3 mb-6">
               <Disc3 className="w-6 h-6 text-secondary animate-[spin_4s_linear_infinite]" />
@@ -124,7 +150,20 @@ export default function Explore() {
         )}
 
         {/* India Fresh Drops Banner */}
-        {newReleasesIndia.length > 0 && (
+        {spotifyLoading ? (
+          <div className="mb-20">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-6 h-6 rounded-full bg-white/5 animate-pulse"></div>
+              <div className="h-8 w-48 bg-white/5 rounded-lg animate-pulse"></div>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="aspect-square rounded-xl bg-white/5 animate-pulse"></div>
+              ))}
+            </div>
+            <WaveformDivider className="mt-12 opacity-50" />
+          </div>
+        ) : newReleasesIndia.length > 0 && (
           <div className="mb-20 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
             <div className="flex items-center gap-3 mb-6">
               <Disc3 className="w-6 h-6 text-secondary animate-[spin_4s_linear_infinite]" />
@@ -205,7 +244,18 @@ export default function Explore() {
               </div>
               
               <div className="flex flex-col gap-6 mb-12">
-                {trendingGlobal.map((track, index) => {
+                {spotifyLoading ? (
+                  [...Array(5)].map((_, i) => (
+                    <div key={i} className="flex items-center gap-4">
+                      <div className="w-8 h-8 bg-white/5 rounded animate-pulse"></div>
+                      <div className="w-14 h-14 bg-white/5 rounded-md animate-pulse"></div>
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-white/5 rounded w-3/4 animate-pulse"></div>
+                        <div className="h-3 bg-white/5 rounded w-1/2 animate-pulse"></div>
+                      </div>
+                    </div>
+                  ))
+                ) : trendingGlobal.map((track, index) => {
                   return (
                     <Link key={track.id} to={`/track/${track.id}`} className="group flex items-center gap-4">
                       <span className="font-display font-bold text-4xl text-white/10 group-hover:text-primary/50 transition-colors">
@@ -228,7 +278,18 @@ export default function Explore() {
               </div>
               
               <div className="flex flex-col gap-6">
-                {trendingIndia.map((track, index) => {
+                {spotifyLoading ? (
+                  [...Array(5)].map((_, i) => (
+                    <div key={i} className="flex items-center gap-4">
+                      <div className="w-8 h-8 bg-white/5 rounded animate-pulse"></div>
+                      <div className="w-14 h-14 bg-white/5 rounded-md animate-pulse"></div>
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-white/5 rounded w-3/4 animate-pulse"></div>
+                        <div className="h-3 bg-white/5 rounded w-1/2 animate-pulse"></div>
+                      </div>
+                    </div>
+                  ))
+                ) : trendingIndia.map((track, index) => {
                   return (
                     <Link key={track.id} to={`/track/${track.id}`} className="group flex items-center gap-4">
                       <span className="font-display font-bold text-4xl text-white/10 group-hover:text-primary/50 transition-colors">
