@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Music, Loader2, Search, X, Check, ArrowRight } from 'lucide-react';
+import { Music, Loader2, Search, X, Check, ArrowRight, Sparkles } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { searchSpotify } from '../services/spotify';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -303,11 +303,26 @@ export default function Signup() {
 
       setSuccess(true);
       const returnTo = location.state?.returnTo || '/explore';
-      setTimeout(() => navigate(returnTo), 2000);
+      setTimeout(() => navigate(returnTo), 4000);
     } catch (err) {
       console.error('Onboarding error:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getWelcomeMessage = () => {
+    const hasGenres = selectedGenres.length > 0;
+    const hasArtists = selectedArtists.length > 0;
+    
+    if (hasGenres && hasArtists) {
+      return `We've tuned your feed for ${selectedGenres.slice(0, 2).join(' & ')} vibes, featuring ${selectedArtists[0].name} and more.`;
+    } else if (hasGenres) {
+      return `We've tuned your feed for ${selectedGenres.slice(0, 3).join(', ')} vibes.`;
+    } else if (hasArtists) {
+      return `Your personalized feed featuring ${selectedArtists.slice(0, 2).map(a => a.name).join(' and ')} is ready.`;
+    } else {
+      return 'Your personalized feed is ready for you to explore.';
     }
   };
 
@@ -350,12 +365,25 @@ export default function Signup() {
           </div>
 
           {success ? (
-            <div className="text-center py-12">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-secondary/20 mb-6 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-                <Check className="w-12 h-12 text-secondary" />
+            <div className="text-center py-12 animate-fade-in-up">
+              <div className="relative inline-flex items-center justify-center mb-8">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-full blur-xl opacity-50 animate-pulse-glow"></div>
+                <div className="relative bg-surface1 p-6 rounded-full border border-white/10">
+                  <Sparkles className="w-12 h-12 text-white" />
+                </div>
               </div>
-              <h3 className="font-display text-3xl font-bold text-white mb-3">Profile Complete!</h3>
-              <p className="text-[#94a3b8] text-lg">Taking you to explore...</p>
+              <h3 className="font-display text-4xl sm:text-5xl font-bold text-white mb-6 tracking-tight">
+                Welcome, <GradientText>{formData.fullName.split(' ')[0]}</GradientText>!
+              </h3>
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md max-w-sm mx-auto shadow-2xl">
+                <p className="text-[#94a3b8] text-lg font-medium leading-relaxed">
+                  {getWelcomeMessage()}
+                </p>
+              </div>
+              <p className="text-[#64748b] text-sm mt-10 flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                Taking you to explore...
+              </p>
             </div>
           ) : step === 1 ? (
             /* STEP 1: SIGNUP FORM */
