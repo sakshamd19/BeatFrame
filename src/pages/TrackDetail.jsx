@@ -103,10 +103,10 @@ export default function TrackDetail() {
             <div className="flex-1 flex flex-col xl:flex-row gap-8 justify-between w-full items-center md:items-start xl:items-center">
               <div className="flex flex-col justify-center min-h-[12rem] md:min-h-[16rem] py-2 flex-1 w-full">
                 <span className="text-[#8b5cf6] uppercase tracking-wider font-bold text-sm mb-2">Track</span>
-                <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight leading-tight">
+                <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight leading-tight">
                   {track.name}
                 </h1>
-                <p className="text-xl md:text-2xl text-[#9ca3af] mb-2 font-medium">
+                <p className="text-xl md:text-2xl text-[#9ca3af] mb-4 font-medium">
                   {track.artists?.map((a, i) => (
                     <React.Fragment key={a.id}>
                       <Link to={`/artist/${a.id}`} className="hover:text-white transition-colors">{a.name}</Link>
@@ -114,91 +114,85 @@ export default function TrackDetail() {
                     </React.Fragment>
                   ))}
                 </p>
-                <Link to={`/album/${track.album?.id}`} className="text-[#6b7280] hover:text-[#8b5cf6] transition-colors mb-8 inline-block">
-                  From the album {track.album?.name}
-                </Link>
+                <div className="text-sm text-[#d1d5db] mb-8 uppercase tracking-wider font-semibold flex flex-wrap items-center justify-center md:justify-start gap-2">
+                  <Link to={`/album/${track.album?.id}`} className="text-[#d1d5db] hover:text-white transition-colors truncate max-w-[200px] sm:max-w-xs">
+                    {track.album?.name}
+                  </Link>
+                  <span className="text-[#6b7280]">•</span>
+                  <span>{track.album?.release_date ? track.album.release_date.split('-')[0] : ''}</span>
+                  <span className="text-[#6b7280]">•</span>
+                  <span>{formatDuration(track.duration_ms)}</span>
+                  {track.explicit && (
+                    <>
+                      <span className="text-[#6b7280]">•</span>
+                      <span className="px-1.5 py-0.5 rounded border border-[#6b7280] text-[10px] leading-none">E</span>
+                    </>
+                  )}
+                </div>
                 
-                <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 w-full">
-                  {track.external_urls?.spotify && (
+                <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6 w-full">
+                  <div className="flex items-center gap-3 mt-4 sm:mt-0 flex-wrap justify-center md:justify-start">
+                    <span className="text-[#9ca3af] text-sm font-medium mr-2">Listen on:</span>
+                    {track.external_urls?.spotify && (
+                      <a 
+                        href={track.external_urls.spotify}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 text-[#1db954] hover:bg-[#1db954]/10 rounded-full transition-all"
+                        title="Listen on Spotify"
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                        </svg>
+                      </a>
+                    )}
+
                     <a 
-                      href={track.external_urls.spotify}
+                      href={`https://www.youtube.com/results?search_query=${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#1db954] hover:bg-[#1ed760] text-black rounded-md font-bold transition-colors shadow-lg shadow-[#1db954]/20 gap-2"
+                      className="p-3 text-[#ff0000] hover:bg-[#ff0000]/10 rounded-full transition-all"
+                      title="Listen on YouTube"
                     >
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                       </svg>
-                      Listen on Spotify
                     </a>
-                  )}
 
-                  <a 
-                    href={`https://www.youtube.com/results?search_query=${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#ff0000] hover:bg-[#cc0000] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#ff0000]/20 gap-2"
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                    </svg>
-                    Listen on YouTube
-                  </a>
+                    <a 
+                      href={`https://music.apple.com/search?term=${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 text-[#fa243c] hover:bg-[#fa243c]/10 rounded-full transition-all"
+                      title="Listen on Apple Music"
+                    >
+                      <Music className="w-6 h-6" />
+                    </a>
 
-                  <a 
-                    href={`https://music.apple.com/search?term=${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#fa243c] hover:bg-[#e02036] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#fa243c]/20 gap-2"
-                  >
-                    <Music className="w-5 h-5" />
-                    Listen on Apple Music
-                  </a>
+                    <a 
+                      href={`https://music.amazon.com/search/${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 text-[#00a8e1] hover:bg-[#00a8e1]/10 rounded-full transition-all"
+                      title="Listen on Amazon Music"
+                    >
+                      <Headphones className="w-6 h-6" />
+                    </a>
 
-                  <a 
-                    href={`https://music.amazon.com/search/${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#00a8e1] hover:bg-[#0096c9] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#00a8e1]/20 gap-2"
-                  >
-                    <Headphones className="w-5 h-5" />
-                    Listen on Amazon Music
-                  </a>
-
-                  <a 
-                    href={`https://www.jiosaavn.com/search/${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-6 py-3 w-full sm:w-[260px] whitespace-nowrap bg-[#2bc5b4] hover:bg-[#25ab9c] text-white rounded-md font-bold transition-colors shadow-lg shadow-[#2bc5b4]/20 gap-2"
-                  >
-                    <Radio className="w-5 h-5" />
-                    Listen on JioSaavn
-                  </a>
+                    <a 
+                      href={`https://www.jiosaavn.com/search/${encodeURIComponent(track.name + ' ' + (track.artists?.[0]?.name || ''))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 text-[#2bc5b4] hover:bg-[#2bc5b4]/10 rounded-full transition-all"
+                      title="Listen on JioSaavn"
+                    >
+                      <Radio className="w-6 h-6" />
+                    </a>
+                  </div>
 
                   {track.preview_url && (
                     <audio controls src={track.preview_url} className="h-12 w-full sm:w-[260px] whitespace-nowrap rounded-md mt-2 md:mt-0" />
                   )}
-                </div>
-              </div>
-              
-              <div className="flex flex-col justify-center bg-surface1 p-6 rounded-2xl border border-white/5 shadow-xl w-full xl:w-72 flex-shrink-0 mt-4 xl:mt-0 text-left">
-                <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(124,58,237,0.8)]"></span>
-                  Track Info
-                </h3>
-                <div className="space-y-4 text-sm">
-                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                    <span className="text-[#9ca3af]">Released</span>
-                    <span className="text-white font-medium">{track.album?.release_date}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                    <span className="text-[#9ca3af]">Duration</span>
-                    <span className="text-white font-medium">{formatDuration(track.duration_ms)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#9ca3af]">Explicit</span>
-                    <span className="text-white font-medium">{track.explicit ? 'Yes 🅴' : 'No'}</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -209,7 +203,7 @@ export default function TrackDetail() {
         <div>
           {reviews.length > 0 && <ReviewStats reviews={reviews} />}
           
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/5 pb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
             <div>
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                 Reviews
@@ -226,7 +220,7 @@ export default function TrackDetail() {
               <select 
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-[#141414] border border-white/10 text-white rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-[#8b5cf6]"
+                className="bg-surface1 border border-white/10 text-white rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-[#8b5cf6] hover:border-white/30 transition-colors"
               >
                 <option value="recent">↓ Recent</option>
                 <option value="liked">⇅ Most Liked</option>
