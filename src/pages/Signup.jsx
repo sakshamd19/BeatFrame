@@ -126,7 +126,6 @@ export default function Signup() {
   const validateField = (name, value) => {
     let error = '';
     if (name === 'fullName' && !value) error = 'Full name is required';
-    if (name === 'bio' && !value) error = 'Bio is required';
     if (name === 'username') {
       if (!value) error = 'Username is required';
       else if (!/^[a-z0-9_]{3,20}$/.test(value)) error = 'Must be 3-20 chars: lowercase, numbers, underscores';
@@ -149,7 +148,6 @@ export default function Signup() {
   const validate = () => {
     const newErrors = {};
     if (!formData.fullName) newErrors.fullName = 'Full name is required';
-    if (!formData.bio) newErrors.bio = 'Bio is required';
     
     if (!formData.username) {
       newErrors.username = 'Username is required';
@@ -240,8 +238,7 @@ export default function Signup() {
           .insert({
             id: data.user.id,
             username: formData.username,
-            full_name: formData.fullName,
-            bio: formData.bio
+            full_name: formData.fullName
           });
 
         if (profileError) throw profileError;
@@ -285,14 +282,20 @@ export default function Signup() {
     setSelectedArtists(selectedArtists.filter(a => a.id !== id));
   };
 
-  const handleOnboardingSubmit = async () => {
+  const handleOnboardingSubmit = async (isSkip = false) => {
+    if (!formData.bio) {
+      setErrors({ bio: 'Bio is required before continuing.' });
+      return;
+    }
     setLoading(true);
+    setErrors({});
     try {
       const { error } = await supabase
         .from('profiles')
         .update({
-          favorite_genres: selectedGenres,
-          favorite_artists: selectedArtists
+          bio: formData.bio,
+          favorite_genres: isSkip ? [] : selectedGenres,
+          favorite_artists: isSkip ? [] : selectedArtists
         })
         .eq('id', userId);
 
@@ -393,14 +396,6 @@ export default function Signup() {
               </div>
 
               <div className="relative group pt-2">
-                <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} onBlur={handleBlur} required rows={2}
-                  className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer resize-none" placeholder="Tell us about your music taste..." />
-                <label htmlFor="bio" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Bio</label>
-                <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary transition-all duration-300 peer-focus:w-full"></div>
-                {errors.bio && <p className="mt-1 text-xs text-red-500">{errors.bio}</p>}
-              </div>
-
-              <div className="relative group pt-2">
                 <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} onBlur={handleBlur} required
                   className="block w-full bg-transparent border-0 border-b-2 border-white/10 py-3 text-white placeholder-transparent focus:outline-none focus:ring-0 focus:border-transparent peer" placeholder="Email" />
                 <label htmlFor="email" className="absolute left-0 -top-3.5 text-sm text-[#94a3b8] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-primary font-medium pointer-events-none">Email address</label>
@@ -466,6 +461,16 @@ export default function Signup() {
           ) : (
             /* STEP 2: ONBOARDING */
             <div className="space-y-10 animate-fade-in-up">
+              
+              <div>
+                <h3 className="font-display font-bold text-xl text-white mb-4">Tell us about yourself</h3>
+                <div className="relative group">
+                  <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} onBlur={handleBlur} required rows={3}
+                    className="block w-full bg-surface1 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-[#94a3b8] focus:outline-none focus:ring-0 focus:border-white/30 transition-colors resize-none" placeholder="Your music taste, favorite concerts, etc." />
+                  {errors.bio && <p className="mt-2 text-xs text-red-500">{errors.bio}</p>}
+                </div>
+              </div>
+
               <div>
                 <h3 className="font-display font-bold text-xl text-white mb-4">Select your favorite genres</h3>
                 <div className="flex flex-wrap gap-2">
@@ -554,7 +559,7 @@ export default function Signup() {
                   )}
                 </button>
                 <div className="text-center">
-                  <button type="button" onClick={() => handleOnboardingSubmit()} className="text-sm font-medium text-[#475569] hover:text-white transition-colors">
+                  <button type="button" onClick={() => handleOnboardingSubmit(true)} className="text-sm font-medium text-[#475569] hover:text-white transition-colors">
                     Skip for now
                   </button>
                 </div>
