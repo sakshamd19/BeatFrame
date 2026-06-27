@@ -14,6 +14,8 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user: currentUser } = useAuth();
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfileAndData = async () => {
@@ -72,6 +74,18 @@ export default function Profile() {
           following: followingCount || 0
         });
 
+        // 4. Check if current user is following this profile
+        if (currentUser && currentUser.id !== profileData.id) {
+          const { data: followData } = await supabase
+            .from('followers')
+            .select('id')
+            .eq('follower_id', currentUser.id)
+            .eq('following_id', profileData.id)
+            .maybeSingle();
+            
+          setIsFollowing(!!followData);
+        }
+
       } catch (err) {
         console.error("Profile error:", err);
         setError(err.message);
@@ -83,7 +97,42 @@ export default function Profile() {
     if (username) {
       fetchProfileAndData();
     }
-  }, [username]);
+  }, [username, currentUser]);
+
+  const handleFollowToggle = async () => {
+    if (!currentUser || !profile) return;
+    setIsFollowLoading(true);
+    
+    try {
+      if (isFollowing) {
+        // Unfollow
+        const { error: unfollowError } = await supabase
+          .from('followers')
+          .delete()
+          .eq('follower_id', currentUser.id)
+          .eq('following_id', profile.id);
+          
+        if (unfollowError) throw unfollowError;
+        
+        setIsFollowing(false);
+        setStats(s => ({ ...s, followers: Math.max(0, s.followers - 1) }));
+      } else {
+        // Follow
+        const { error: followError } = await supabase
+          .from('followers')
+          .insert({ follower_id: currentUser.id, following_id: profile.id });
+          
+        if (followError) throw followError;
+        
+        setIsFollowing(true);
+        setStats(s => ({ ...s, followers: s.followers + 1 }));
+      }
+    } catch (err) {
+      console.error("Follow toggle error:", err);
+    } finally {
+      setIsFollowLoading(false);
+    }
+  };
 
   if (loading) return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-[#0a0a0a]">
@@ -142,14 +191,32 @@ export default function Profile() {
                   </a>
                 )}
               </div>
-              {currentUser?.id === profile.id && (
+              {currentUser?.id === profile.id ? (
                 <Link 
                   to="/settings" 
                   className="inline-flex items-center justify-center px-5 py-2.5 bg-surface2 border border-white/10 rounded-full text-sm font-bold text-white hover:bg-white/10 transition-colors"
                 >
                   Edit Profile
                 </Link>
-              )}
+              ) : currentUser ? (
+                <button
+                  onClick={handleFollowToggle}
+                  disabled={isFollowLoading}
+                  className={`inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+                    isFollowing
+                      ? 'bg-surface2 border border-white/10 text-white hover:bg-white/10 hover:border-white/30'
+                      : 'bg-gradient-to-r from-primary to-secondary text-white shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:scale-105'
+                  }`}
+                >
+                  {isFollowLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : isFollowing ? (
+                    'Following'
+                  ) : (
+                    'Follow'
+                  )}
+                </button>
+              ) : null}
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-3 mb-4">
               <p className="gradient-text font-bold text-lg text-center md:text-left m-0">@{profile.username}</p>
