@@ -280,24 +280,26 @@ export default function Explore() {
           <div className="lg:col-span-8">
             
             {/* Filter Pills */}
-            <div className="flex flex-wrap items-center gap-3 mb-10 sticky top-20 bg-[#050508]/98 py-4 z-40 border-b border-white/5">
-              {filters.map(f => (
-                <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all ${
-                    filter === f 
-                      ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-[0_0_15px_rgba(124,58,237,0.3)]' 
-                      : 'bg-surface1 border border-white/10 text-[#94a3b8] hover:border-white/30 hover:text-white'
-                  }`}
-                >
-                  {f === 'Bangers' && <Flame className="w-4 h-4" />}
-                  {f === 'Fire' && <Zap className="w-4 h-4" />}
-                  {f === 'Decent' && <ThumbsUp className="w-4 h-4" />}
-                  {f === 'Skip' && <SkipForward className="w-4 h-4" />}
-                  <span>{f === 'All' ? 'All Reviews' : f}</span>
-                </button>
-              ))}
+            <div className="sticky top-20 z-40 py-4 mb-10 bg-background/80 backdrop-blur-xl border-b border-white/5 -mx-4 px-4 sm:mx-0 sm:px-0">
+              <div className="inline-flex flex-wrap sm:flex-nowrap items-center bg-[#141414] rounded-3xl sm:rounded-full p-1.5 border border-white/5 shadow-inner gap-1 max-w-full overflow-x-auto scrollbar-hide">
+                {filters.map(f => (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 border border-transparent whitespace-nowrap ${
+                      filter === f 
+                        ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md scale-[1.02]' 
+                        : 'text-[#6b7280] hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {f === 'Bangers' && <Flame className="w-4 h-4" />}
+                    {f === 'Fire' && <Zap className="w-4 h-4" />}
+                    {f === 'Decent' && <ThumbsUp className="w-4 h-4" />}
+                    {f === 'Skip' && <SkipForward className="w-4 h-4" />}
+                    <span>{f === 'All' ? 'All Reviews' : f}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-col gap-6">
