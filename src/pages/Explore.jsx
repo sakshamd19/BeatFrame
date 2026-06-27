@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { getNewReleases, getTrendingTracks } from '../services/spotify';
+import { getNewReleases, getTrendingTracks, getRecommendations } from '../services/spotify';
 import ReviewCard from '../components/ReviewCard';
+import AlbumCard from '../components/AlbumCard';
 import GradientText from '../components/ui/GradientText';
 import WaveformDivider from '../components/ui/WaveformDivider';
 import GlowBadge from '../components/ui/GlowBadge';
-import { Disc3, Zap, Flame, ThumbsUp, SkipForward } from 'lucide-react';
+import { Disc3, Zap, Flame, ThumbsUp, SkipForward, Sparkles } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Explore() {
   const [newReleasesGlobal, setNewReleasesGlobal] = useState([]);
@@ -17,6 +19,10 @@ export default function Explore() {
   const [reviewsLoading, setReviewsLoading] = useState(true);
   const [spotifyLoading, setSpotifyLoading] = useState(true);
   const [filter, setFilter] = useState('All');
+  
+  const { user, profile } = useAuth();
+  const [recommendations, setRecommendations] = useState([]);
+  const [recsLoading, setRecsLoading] = useState(false);
 
   // Fast fetch: Supabase Reviews
   useEffect(() => {
@@ -80,6 +86,64 @@ export default function Explore() {
     };
     fetchSpotifyData();
   }, []);
+
+  // Fetch Personalized Recommendations
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!user) return;
+      
+      try {
+        setRecsLoading(true);
+        // 1. Get recent review tracks for seed
+        const { data: userReviews } = await supabase
+          .from('reviews')
+          .select('spotify_album_id')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(20);
+          
+        let seed_tracks = [];
+        if (userReviews) {
+          const trackReviews = userReviews.filter(r => r.spotify_album_id?.startsWith('track_'));
+          seed_tracks = trackReviews.map(r => r.spotify_album_id.replace('track_', '')).slice(0, 2);
+        }
+
+        let seed_artists = [];
+        if (profile?.favorite_artists?.length > 0) {
+          seed_artists = profile.favorite_artists.slice(0, 2).map(a => a.id);
+        }
+
+        let seed_genres = [];
+        if (profile?.favorite_genres?.length > 0) {
+          seed_genres = [profile.favorite_genres[0].toLowerCase().replace(/ /g, '-')];
+        }
+        
+        // Skip if no seeds
+        if (seed_tracks.length === 0 && seed_artists.length === 0 && seed_genres.length === 0) {
+          return;
+        }
+
+        const data = await getRecommendations({ seed_artists, seed_genres, seed_tracks, limit: 10 });
+        if (data?.tracks) {
+          const uniqueAlbums = [];
+          const seenAlbums = new Set();
+          for (const track of data.tracks) {
+            if (!seenAlbums.has(track.album.id)) {
+              seenAlbums.add(track.album.id);
+              uniqueAlbums.push(track.album);
+            }
+          }
+          setRecommendations(uniqueAlbums);
+        }
+      } catch (err) {
+        console.error('Error fetching recommendations:', err);
+      } finally {
+        setRecsLoading(false);
+      }
+    };
+    
+    fetchRecommendations();
+  }, [user, profile]);
 
   const filters = ['All', 'Bangers', 'Fire', 'Decent', 'Skip'];
 
@@ -210,6 +274,24 @@ export default function Explore() {
                 </button>
               ))}
             </div>
+
+            {/* Recommended For You Section */}
+            {filter === 'All' && user && recommendations.length > 0 && (
+              <div className="mb-12 animate-fade-in-up">
+                <div className="flex items-center gap-3 mb-6">
+                  <Sparkles className="w-5 h-5 text-secondary" />
+                  <h2 className="font-display font-bold text-xl text-white">Recommended For You</h2>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                  {recommendations.slice(0, 5).map((album, i) => (
+                    <div key={album.id} style={{ animationDelay: `${i * 0.1}s` }} className="animate-fade-in-up">
+                      <AlbumCard album={album} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="flex flex-col gap-6">
               {allReviews.length === 0 ? (

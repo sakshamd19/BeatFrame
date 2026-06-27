@@ -166,3 +166,19 @@ export const getArtistAlbums = async (artistId, market = 'IN') => {
 export const getRelatedArtists = async (artistId) => {
   return fetchSpotifyAPI(`/artists/${artistId}/related-artists`);
 };
+
+export const getRecommendations = async ({ seed_artists = [], seed_genres = [], seed_tracks = [], limit = 10, market = 'IN' }) => {
+  try {
+    const params = new URLSearchParams();
+    if (seed_artists.length > 0) params.append('seed_artists', seed_artists.join(','));
+    if (seed_genres.length > 0) params.append('seed_genres', seed_genres.join(','));
+    if (seed_tracks.length > 0) params.append('seed_tracks', seed_tracks.join(','));
+    params.append('limit', limit);
+    params.append('market', market);
+
+    return await fetchSpotifyAPI(`/recommendations?${params.toString()}`);
+  } catch (error) {
+    console.error('Error fetching recommendations:', error);
+    throw error;
+  }
+};
